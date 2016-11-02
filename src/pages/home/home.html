@@ -11,22 +11,23 @@
 
   <ion-list>
 
-    <ion-card class="card">
+    <ion-card class="card" *ngFor="let feedItem of feed">
       <ion-row>
-        <ion-col>
-            <div class="title">This is a really long title filled with random text of characters</div>
-            <span class="subreddit">gaming</span>
+        <ion-col padding>
+            <div class="title">{{feedItem.data.title | slice: 0:90 }}</div>
+            <span class="subreddit">{{feedItem.data.subreddit}}</span>
             <span class="bullet">&sdot;</span>
-            <span class="url">i.imgur.com</span>
+            <span class="url">{{feedItem.data.domain}}</span>
             <span class="bullet">&sdot;</span>
             <span class="posted-time">3h</span>
             <br/>
-            <span class="upvotes">8436</span>
+            <span class="upvotes">{{feedItem.data.ups}}</span>
             <span class="bullet">&sdot;</span>
-            <span class="comments">629 comments</span>
+            <span class="comments">{{feedItem.data.num_comments}} comments</span>
+          <span class="gilded" *ngIf="feedItem.data.gilded > 0">&nbsp;x{{feedItem.data.gilded}}</span>
         </ion-col>
-        <ion-col width-33>
-          <img class="thumbnail" src="../../assets/images/placeholder-image.png">
+        <ion-col *ngIf="feedItem.data.thumbnail !== 'default' && feedItem.data.thumbnail !== 'self'" width-33>
+          <img class="thumbnail" src="{{feedItem.data.thumbnail}}">
         </ion-col>
       </ion-row>
     </ion-card>

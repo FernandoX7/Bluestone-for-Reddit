@@ -3,6 +3,8 @@ import { IonicApp, IonicModule } from 'ionic-angular';
 import { MyApp } from './app.component';
 import { Home } from '../pages/home/home';
 import { Page2 } from '../pages/page2/page2';
+import {FeedService} from "../pages/home/feed-service";
+import {Constants} from "../pages/util/Constants";
 
 @NgModule({
   declarations: [
@@ -19,6 +21,6 @@ import { Page2 } from '../pages/page2/page2';
     Home,
     Page2
   ],
-  providers: []
+  providers: [FeedService, Constants]
 })
 export class AppModule {}
