@@ -11,7 +11,7 @@ import { Page2 } from '../pages/page2/page2';
     Page2
   ],
   imports: [
-    IonicModule.forRoot(MyApp)
+    IonicModule.forRoot(MyApp, { mode: 'md' })
   ],
   bootstrap: [IonicApp],
   entryComponents: [
