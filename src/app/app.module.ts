@@ -2,23 +2,25 @@ import { NgModule } from '@angular/core';
 import { IonicApp, IonicModule } from 'ionic-angular';
 import { MyApp } from './app.component';
 import { Home } from '../pages/home/home';
-import { Page2 } from '../pages/page2/page2';
+import { HomeItemDetail } from '../pages/home-item-detail/home-item-detail';
+import {FeedService} from "../pages/home/feed-service";
+import {Constants} from "../pages/util/Constants";
 
 @NgModule({
   declarations: [
     MyApp,
     Home,
-    Page2
+    HomeItemDetail
   ],
   imports: [
-    IonicModule.forRoot(MyApp)
+    IonicModule.forRoot(MyApp, { mode: 'md' })
   ],
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
     Home,
-    Page2
+    HomeItemDetail
   ],
-  providers: []
+  providers: [FeedService, Constants]
 })
 export class AppModule {}
