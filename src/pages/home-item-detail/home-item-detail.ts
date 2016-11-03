@@ -24,6 +24,13 @@ export class HomeItemDetail implements OnInit {
       // Iterate through the resolutions array to find the highest resolution for that picture
       var maximumResolution = 10;
       var selectedItemsResolutions = this.selectedItem.data.preview.images[0].resolutions;
+
+      // Check if it's a gif
+      if (typeof this.selectedItem.data.preview.images[0].variants.gif !== 'undefined') {
+        var selectedItemsResolutionsGifs = this.selectedItem.data.preview.images[0].variants.gif.resolutions;
+        selectedItemsResolutions = selectedItemsResolutionsGifs;
+      }
+
       while (maximumResolution > 0) {
         if (typeof selectedItemsResolutions[maximumResolution] === 'undefined') {
           maximumResolution--;
