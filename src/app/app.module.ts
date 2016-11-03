@@ -5,12 +5,14 @@ import { Home } from '../pages/home/home';
 import { HomeItemDetail } from '../pages/home-item-detail/home-item-detail';
 import {FeedService} from "../pages/home/feed-service";
 import {Constants} from "../pages/util/Constants";
+import {ThumbnailImage} from "../pages/popups/thumbnail-image";
 
 @NgModule({
   declarations: [
     MyApp,
     Home,
-    HomeItemDetail
+    HomeItemDetail,
+    ThumbnailImage
   ],
   imports: [
     IonicModule.forRoot(MyApp, { mode: 'md' })
@@ -19,7 +21,8 @@ import {Constants} from "../pages/util/Constants";
   entryComponents: [
     MyApp,
     Home,
-    HomeItemDetail
+    HomeItemDetail,
+    ThumbnailImage
   ],
   providers: [FeedService, Constants]
 })

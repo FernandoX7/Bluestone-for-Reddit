@@ -1,8 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import * as _ from 'lodash';
-import {NavController} from 'ionic-angular';
+import {NavController, ModalController, Thumbnail} from 'ionic-angular';
 import {FeedService} from "./feed-service";
 import {HomeItemDetail} from "../home-item-detail/home-item-detail";
+import {ThumbnailImage} from "../popups/thumbnail-image";
 
 @Component({
   selector: 'page-home',
@@ -13,7 +14,7 @@ export class Home implements OnInit {
 
   feed: any;
 
-  constructor(public navCtrl: NavController, private data: FeedService) {
+  constructor(public navCtrl: NavController, private data: FeedService, public modalCtrl: ModalController) {
 
   }
 
@@ -52,7 +53,7 @@ export class Home implements OnInit {
               }
             }
           }
-          
+
           console.log('Feed data', data);
         },
         err => console.error('There was an error getting the news feed', err),
@@ -66,6 +67,13 @@ export class Home implements OnInit {
     this.navCtrl.push(HomeItemDetail, {
       feedItem: item
     });
+  }
+
+  openImage(feedItem) {
+    let thumbnailPopup = this.modalCtrl.create(ThumbnailImage, {
+      image: feedItem.data.thumbnailImage
+    });
+    thumbnailPopup.present();
   }
 
 }
