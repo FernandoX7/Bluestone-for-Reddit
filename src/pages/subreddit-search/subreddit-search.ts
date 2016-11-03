@@ -1,7 +1,9 @@
 import {Component, OnInit} from '@angular/core';
-import {NavController, NavParams} from 'ionic-angular';
+import {NavController, NavParams, ModalController} from 'ionic-angular';
 import {GetSubredditService} from "./get-subreddit-service";
 import * as _ from 'lodash';
+import {HomeItemDetail} from "../home-item-detail/home-item-detail";
+import {ThumbnailImage} from "../popups/thumbnail-image";
 
 @Component({
   selector: 'page-subreddit-search',
@@ -14,7 +16,7 @@ export class SubredditSearch implements OnInit {
   passedSubredditName: string;
   feed: any;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private data: GetSubredditService) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, private data: GetSubredditService, public modalCtrl: ModalController) {
     this.passedSubredditName = navParams.get('searchValue');
   }
 
@@ -61,6 +63,19 @@ export class SubredditSearch implements OnInit {
         () => console.log('Successfully got the searched subreddit')
       );
 
+  }
+
+  goToItemDetail(item) {
+    this.navCtrl.push(HomeItemDetail, {
+      feedItem: item
+    });
+  }
+
+  openImage(feedItem) {
+    let thumbnailPopup = this.modalCtrl.create(ThumbnailImage, {
+      image: feedItem.data.thumbnailImage
+    });
+    thumbnailPopup.present();
   }
 
 }
