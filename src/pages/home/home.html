@@ -27,7 +27,7 @@
           <span class="gilded" *ngIf="feedItem.data.gilded > 0">&nbsp;x{{feedItem.data.gilded}}</span>
         </ion-col>
         <ion-col *ngIf="feedItem.data.thumbnail !== 'default' && feedItem.data.thumbnail !== 'self'" width-33>
-          <img class="thumbnail" src="{{feedItem.data.thumbnail}}">
+          <img class="thumbnail" src="{{feedItem.data.thumbnailImage}}">
         </ion-col>
       </ion-row>
     </ion-card>
