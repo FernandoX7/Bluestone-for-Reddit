@@ -44,6 +44,15 @@ export class HomeItemDetail implements OnInit {
       }
     }
 
+    // Parse selftext html into actual html that can be interpreted
+    this.selectedItem.data['selftext_html_parsed'] = this.decodeHtml(this.selectedItem.data.selftext_html);
+
+  }
+
+  decodeHtml(html) {
+    var txt = document.createElement("textarea");
+    txt.innerHTML = html;
+    return txt.value;
   }
 
 

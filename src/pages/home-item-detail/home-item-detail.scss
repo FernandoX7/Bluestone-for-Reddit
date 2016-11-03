@@ -1,5 +1,9 @@
 page-home-item-detail {
 
+  .background {
+    background-color: #141D28;
+  }
+
   .header-image {
     width: 100%;
     height: 50%;
@@ -12,6 +16,24 @@ page-home-item-detail {
 
   .row-icon {
     color: #A0A2A8;
+  }
+
+  .selftext-background {
+    background-color: #1B2636;
+  }
+
+  .post-creator-username {
+    color: #FB3841;
+    font-size: 1.35rem;
+  }
+
+  .selftext {
+    color: #E8E8E8;
+    font-size: 1.55rem;
+  }
+
+  .upvotes {
+    font-size: 1.90rem;
   }
 
 }
