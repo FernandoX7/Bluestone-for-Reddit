@@ -13,6 +13,7 @@ import {ThumbnailImage} from "../popups/thumbnail-image";
 export class Home implements OnInit {
 
   feed: any;
+  randomPlaceholder: string;
 
   constructor(public navCtrl: NavController, private data: FeedService, public modalCtrl: ModalController) {
 
@@ -59,7 +60,8 @@ export class Home implements OnInit {
         err => console.error('There was an error getting the news feed', err),
         () => console.log('Successfully got the news feed')
       );
-
+    
+    this.getPlaceholder();
 
   }
 
@@ -74,6 +76,22 @@ export class Home implements OnInit {
       image: feedItem.data.thumbnailImage
     });
     thumbnailPopup.present();
+  }
+
+  getItems(event: any) {
+    // set val to the value of the searchbar
+    let searchValue = event.target.value;
+    console.log(searchValue);
+  }
+
+  getPlaceholder() {
+    var searches = ['camaro', 'AskReddit', 'politics', 'android', 'iOS',
+      'pics', 'funny', 'nfl', 'gaming', 'WTF', 'movies'];
+    this.randomPlaceholder = searches[Math.floor(Math.random() * searches.length)];
+  }
+
+  clearItems() {
+    this.getPlaceholder();
   }
 
 }
