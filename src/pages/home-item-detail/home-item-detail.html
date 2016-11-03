@@ -17,6 +17,8 @@
     <ion-col padding>
       <div class="title">{{selectedItem.data.title}}</div>
       <span class="subreddit">{{selectedItem.data.subreddit}}</span>
+      <span *ngIf="selectedItem.data.link_flair_text !== null && selectedItem.data.link_flair_text !== ''" class="bullet">&sdot;</span>
+      <span *ngIf="selectedItem.data.link_flair_text !== null && selectedItem.data.link_flair_text !== ''" class="link-flair">{{selectedItem.data.link_flair_text}}</span>
       <span class="bullet">&sdot;</span>
       <span class="url">{{selectedItem.data.domain}}</span>
       <span class="bullet">&sdot;</span>
@@ -26,6 +28,13 @@
       <span class="bullet">&sdot;</span>
       <span class="comments">{{selectedItem.data.num_comments}} comments</span>
       <span class="gilded" *ngIf="selectedItem.data.gilded > 0">&nbsp;x{{selectedItem.data.gilded}}</span>
+    </ion-col>
+  </ion-row>
+
+  <ion-row *ngIf="selectedItem.data.selftext !== ''">
+    <ion-col padding class="selftext-background">
+      <div class="post-creator-username">{{selectedItem.data.author}}</div>
+      <div [innerHTML]="selectedItem.data.selftext_html_parsed" class="selftext"></div>
     </ion-col>
   </ion-row>
 
