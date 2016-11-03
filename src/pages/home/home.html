@@ -21,7 +21,8 @@
     <ion-card class="card" *ngFor="let feedItem of feed">
       <ion-row>
         <ion-col padding (click)="goToItemDetail(feedItem)">
-          <div class="title">{{feedItem.data.title | slice: 0:90 }}</div>
+          <span class="title">{{feedItem.data.title | slice: 0:90 }}</span><span *ngIf="feedItem.data.title.length > 90" class="title">...</span>
+          <br/>
           <span class="subreddit">{{feedItem.data.subreddit}}</span>
           <span *ngIf="feedItem.data.link_flair_text !== null && feedItem.data.link_flair_text !== ''" class="bullet">&sdot;</span>
           <span *ngIf="feedItem.data.link_flair_text !== null && feedItem.data.link_flair_text !== ''" class="link-flair">{{feedItem.data.link_flair_text}}</span>
