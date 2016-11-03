@@ -1,0 +1,38 @@
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>r/{{passedSubredditName}}</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content class="background">
+
+  <ion-list>
+
+    <ion-card class="card" *ngFor="let feedItem of feed">
+      <ion-row>
+        <ion-col padding (click)="goToItemDetail(feedItem)">
+          <div class="title">{{feedItem.data.title | slice: 0:90 }}</div>
+          <span class="subreddit">{{feedItem.data.subreddit}}</span>
+          <span class="bullet">&sdot;</span>
+          <span class="url">{{feedItem.data.domain}}</span>
+          <span class="bullet">&sdot;</span>
+          <span class="posted-time">3h</span>
+          <br/>
+          <span class="upvotes">{{feedItem.data.ups}}</span>
+          <span class="bullet">&sdot;</span>
+          <span class="comments">{{feedItem.data.num_comments}} comments</span>
+          <span class="gilded" *ngIf="feedItem.data.gilded > 0">&nbsp;x{{feedItem.data.gilded}}</span>
+        </ion-col>
+        <ion-col *ngIf="feedItem.data.thumbnail !== 'default' && feedItem.data.thumbnail !== 'self'" width-33
+                 (click)="openImage(feedItem)">
+          <img class="thumbnail" src="{{feedItem.data.thumbnailImage}}">
+        </ion-col>
+      </ion-row>
+    </ion-card>
+
+  </ion-list>
+
+</ion-content>

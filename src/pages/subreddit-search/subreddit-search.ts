@@ -1,32 +1,34 @@
 import {Component, OnInit} from '@angular/core';
+import {NavController, NavParams, ModalController} from 'ionic-angular';
+import {GetSubredditService} from "./get-subreddit-service";
 import * as _ from 'lodash';
-import {NavController, ModalController, Thumbnail} from 'ionic-angular';
-import {FeedService} from "./feed-service";
 import {HomeItemDetail} from "../home-item-detail/home-item-detail";
 import {ThumbnailImage} from "../popups/thumbnail-image";
-import {SubredditSearch} from "../subreddit-search/subreddit-search";
 
 @Component({
-  selector: 'page-home',
-  templateUrl: 'home.html',
-  providers: [FeedService]
+  selector: 'page-subreddit-search',
+  templateUrl: 'subreddit-search.html',
+  providers: [GetSubredditService]
 })
-export class Home implements OnInit {
 
+export class SubredditSearch implements OnInit {
+
+  passedSubredditName: string;
   feed: any;
-  randomPlaceholder: string;
 
-  constructor(public navCtrl: NavController, private data: FeedService, public modalCtrl: ModalController) {
-
+  constructor(public navCtrl: NavController, public navParams: NavParams, private data: GetSubredditService, public modalCtrl: ModalController) {
+    this.passedSubredditName = navParams.get('searchValue');
   }
 
   ngOnInit() {
+
     this.data
-      .getFeed()
+      .getSubreddit(this.passedSubredditName)
       .subscribe(
         data => {
           data = data.data.children;
           this.feed = data;
+          console.log(this.passedSubredditName, 'data:', data);
 
           // Add higher quality thumbnails
           for (var i = 0; i < data.length; i++) {
@@ -56,13 +58,10 @@ export class Home implements OnInit {
             }
           }
 
-          console.log('Feed data', data);
         },
-        err => console.error('There was an error getting the news feed', err),
-        () => console.log('Successfully got the news feed')
+        err => console.error('There was an error getting the searched subreddit', err),
+        () => console.log('Successfully got the searched subreddit')
       );
-
-    this.getPlaceholder();
 
   }
 
@@ -77,25 +76,6 @@ export class Home implements OnInit {
       image: feedItem.data.thumbnailImage
     });
     thumbnailPopup.present();
-  }
-
-  getItems(event: any) {
-    // set val to the value of the searchbar
-    let searchValue = event.target.value;
-    console.log(searchValue);
-    this.navCtrl.push(SubredditSearch, {
-      searchValue: searchValue
-    });
-  }
-
-  getPlaceholder() {
-    var searches = ['camaro', 'AskReddit', 'politics', 'android', 'iOS',
-      'pics', 'funny', 'nfl', 'gaming', 'WTF', 'movies'];
-    this.randomPlaceholder = searches[Math.floor(Math.random() * searches.length)];
-  }
-
-  clearItems() {
-    this.getPlaceholder();
   }
 
 }

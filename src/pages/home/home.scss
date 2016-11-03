@@ -1,42 +1,15 @@
 page-home {
 
-  //Card
-  .card {
-    background-color: #141D28;
-  }
-  .title {
-    color: #E8E8E8;
-    font-size: 1.85rem;
-  }
-  .subreddit {
-    color: #FB3841;
-  }
-  .url {
-    color: #8E9096
-  }
-  .posted-time {
-    color: #8E9096;
-  }
-  .upvotes {
-    color: #8E9096;
-    font-weight: 600;
-    font-size: 1.60rem;
-  }
-  .comments {
-    color: #8E9096;
-    font-size: 1.60rem;
-  }
-  .gilded {
-    color: #F29010;
-    font-size: 1.75rem;
-  }
-  .bullet {
-    color: #8E9096;
-  }
   .thumbnail {
     width: 100%;
     height: 100%;
     display: block;
+  }
+
+  .searchbar-md
+  .searchbar-input {
+    background-color: #141D28;
+    color: #bdc0c0;
   }
 
 }
