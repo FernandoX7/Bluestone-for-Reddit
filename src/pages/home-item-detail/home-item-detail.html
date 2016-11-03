@@ -9,6 +9,50 @@
 
 <ion-content class="background">
 
+  <ion-card class="card" *ngIf="selectedItem.data.thumbnail !== 'default' && selectedItem.data.thumbnail !== 'self'">
+  <img class="header-image" src="{{selectedItem.data.headerImage}}">
+  </ion-card>
 
+  <ion-row>
+    <ion-col padding>
+      <div class="title">{{selectedItem.data.title}}</div>
+      <span class="subreddit">{{selectedItem.data.subreddit}}</span>
+      <span class="bullet">&sdot;</span>
+      <span class="url">{{selectedItem.data.domain}}</span>
+      <span class="bullet">&sdot;</span>
+      <span class="posted-time">3h</span>
+      <br/>
+      <span class="upvotes">{{selectedItem.data.ups}}</span>
+      <span class="bullet">&sdot;</span>
+      <span class="comments">{{selectedItem.data.num_comments}} comments</span>
+      <span class="gilded" *ngIf="selectedItem.data.gilded > 0">&nbsp;x{{selectedItem.data.gilded}}</span>
+    </ion-col>
+  </ion-row>
+
+  <!--TODO: Actions - maybe-->
+  <!--<ion-row>-->
+    <!--<ion-col padding>-->
+      <!--<button ion-button icon-only>-->
+        <!--<ion-icon name="home"></ion-icon>-->
+      <!--</button>-->
+    <!--</ion-col>-->
+    <!--<ion-col padding>-->
+      <!--<button ion-button icon-only>-->
+        <!--<ion-icon name="home"></ion-icon>-->
+      <!--</button>-->
+    <!--</ion-col>-->
+    <!--<ion-col padding>-->
+      <!--<button ion-button icon-only>-->
+        <!--<ion-icon name="home"></ion-icon>-->
+      <!--</button>-->
+    <!--</ion-col>-->
+    <!--<ion-col padding>-->
+      <!--<button ion-button icon-only>-->
+        <!--<ion-icon name="home"></ion-icon>-->
+      <!--</button>-->
+    <!--</ion-col>-->
+  <!--</ion-row>-->
+
+  <div class="seperator"></div>
 
 </ion-content>
