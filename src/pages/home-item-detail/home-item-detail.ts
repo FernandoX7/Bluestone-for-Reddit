@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import * as _ from 'lodash';
 import {NavController, NavParams} from 'ionic-angular';
+import * as moment from 'moment';
 
 @Component({
   selector: 'page-home-item-detail',
@@ -46,6 +47,8 @@ export class HomeItemDetail implements OnInit {
 
     // Parse selftext html into actual html that can be interpreted
     this.selectedItem.data['selftext_html_parsed'] = this.decodeHtml(this.selectedItem.data.selftext_html);
+    // Get hours posted ago
+    this.selectedItem.data['hoursAgo'] = this.getHoursAgo(this.selectedItem.data.created_utc);
 
   }
 
@@ -55,5 +58,9 @@ export class HomeItemDetail implements OnInit {
     return txt.value;
   }
 
-
+    private getHoursAgo(created_utc: any) {
+    var currentTime = moment();
+    var createdAt = moment.unix(created_utc);
+    return currentTime.diff(createdAt, 'hours');
+  }
 }

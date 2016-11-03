@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import * as _ from 'lodash';
+import * as moment from 'moment';
 import {NavController, ModalController, Thumbnail} from 'ionic-angular';
 import {FeedService} from "./feed-service";
 import {HomeItemDetail} from "../home-item-detail/home-item-detail";
