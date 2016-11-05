@@ -58,9 +58,25 @@ export class HomeItemDetail implements OnInit {
     return txt.value;
   }
 
-    private getHoursAgo(created_utc: any) {
+  private getHoursAgo(created_utc: any) {
     var currentTime = moment();
     var createdAt = moment.unix(created_utc);
-    return currentTime.diff(createdAt, 'hours');
+    var hoursAgo = currentTime.diff(createdAt, 'hours');
+    if (hoursAgo > 24) {
+      var daysAgo = currentTime.diff(createdAt, 'days');
+      return daysAgo + 'd';
+    } else if (hoursAgo > 168) { // 7 days or 1 week
+      var weeksAgo = currentTime.diff(createdAt, 'weeks');
+      return weeksAgo + 'w';
+    } else if (hoursAgo > 744) { // 31 days or 1 month
+      var monthsAgo = currentTime.diff(createdAt, 'months');
+      return monthsAgo + 'm';
+    } else if (hoursAgo > 8760) { // 365 days or 1 year
+      var yearsAgo = currentTime.diff(createdAt, 'years');
+      return yearsAgo + 'y';
+    } else {
+      return hoursAgo + 'h';
+    }
   }
+
 }
