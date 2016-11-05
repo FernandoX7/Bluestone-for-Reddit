@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {NavController, NavParams, ModalController} from 'ionic-angular';
 import {GetSubredditService} from "./get-subreddit-service";
 import * as _ from 'lodash';
+import * as moment from 'moment';
 import {HomeItemDetail} from "../home-item-detail/home-item-detail";
 import {ThumbnailImage} from "../popups/thumbnail-image";
 
@@ -32,6 +33,10 @@ export class SubredditSearch implements OnInit {
 
           // Add higher quality thumbnails
           for (var i = 0; i < data.length; i++) {
+
+            // Get hours posted ago
+            this.feed[i].data['hoursAgo'] = this.getHoursAgo(this.feed[i].data.created_utc);
+
             // If there's no .preview property - it's an all text post
             if (typeof data[i].data.preview !== 'undefined') {
               // Iterate through the resolutions array to find the highest resolution for that picture
@@ -76,6 +81,27 @@ export class SubredditSearch implements OnInit {
       image: feedItem.data.thumbnailImage
     });
     thumbnailPopup.present();
+  }
+
+  private getHoursAgo(created_utc: any) {
+    var currentTime = moment();
+    var createdAt = moment.unix(created_utc);
+    var hoursAgo = currentTime.diff(createdAt, 'hours');
+    if (hoursAgo > 24) {
+      var daysAgo = currentTime.diff(createdAt, 'days');
+      return daysAgo + 'd';
+    } else if (hoursAgo > 168) { // 7 days or 1 week
+      var weeksAgo = currentTime.diff(createdAt, 'weeks');
+      return weeksAgo + 'w';
+    } else if (hoursAgo > 744) { // 31 days or 1 month
+      var monthsAgo = currentTime.diff(createdAt, 'months');
+      return monthsAgo + 'm';
+    } else if (hoursAgo > 8760) { // 365 days or 1 year
+      var yearsAgo = currentTime.diff(createdAt, 'years');
+      return yearsAgo + 'y';
+    } else {
+      return hoursAgo + 'h';
+    }
   }
 
 }
