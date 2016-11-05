@@ -107,20 +107,14 @@ export class Home implements OnInit {
     var currentTime = moment();
     var createdAt = moment.unix(created_utc);
     var hoursAgo = currentTime.diff(createdAt, 'hours');
-    if (hoursAgo > 24) {
+    if (hoursAgo <= 23) {
+      return hoursAgo + 'h';
+    } else if (hoursAgo >= 24 && hoursAgo <= 8759) {
       var daysAgo = currentTime.diff(createdAt, 'days');
       return daysAgo + 'd';
-    } else if (hoursAgo > 168) { // 7 days or 1 week
-      var weeksAgo = currentTime.diff(createdAt, 'weeks');
-      return weeksAgo + 'w';
-    } else if (hoursAgo > 744) { // 31 days or 1 month
-      var monthsAgo = currentTime.diff(createdAt, 'months');
-      return monthsAgo + 'm';
-    } else if (hoursAgo > 8760) { // 365 days or 1 year
+    } else if (hoursAgo >= 8760) {
       var yearsAgo = currentTime.diff(createdAt, 'years');
       return yearsAgo + 'y';
-    } else {
-      return hoursAgo + 'h';
     }
   }
 
