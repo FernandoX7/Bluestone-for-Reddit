@@ -14,15 +14,27 @@ export class MyApp {
 
   rootPage: any = Home;
 
-  pages: Array<{title: string, component: any}>;
+  pages: Array<{title: string, component: any, icon: string}>;
+  subscriptions: Array<{title: string}>;
 
   constructor(public platform: Platform) {
     this.initializeApp();
 
     // used for an example of ngFor and navigation
     this.pages = [
-      { title: 'Home', component: Home },
-      { title: 'Home Item Detail', component: HomeItemDetail }
+      { title: 'Home', component: Home, icon: 'home' },
+      { title: 'Front page', component: Home, icon: 'trending-up' },
+      { title: 'All', component: Home, icon: 'podium' },
+      // New Line
+      { title: 'Search', component: Home, icon: 'search' },
+      { title: 'Settings', component: Home, icon: 'settings' },
+    ];
+
+    this.subscriptions = [
+      { title: 'Android' },
+      { title: 'Camaro' },
+      { title: 'iOS' },
+      { title: 'Mustang' }
     ];
 
   }

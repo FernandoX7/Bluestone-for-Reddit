@@ -1,16 +1,36 @@
 <ion-menu [content]="content">
   <ion-header>
     <ion-toolbar>
-      <ion-title>Menu</ion-title>
     </ion-toolbar>
   </ion-header>
 
-  <ion-content>
-    <ion-list>
-      <button menuClose ion-item *ngFor="let p of pages" (click)="openPage(p)">
-        {{p.title}}
-      </button>
+  <ion-content class="background">
+
+    <ion-list style="margin-top: -1px;">
+      <!--Side menu-->
+      <ion-item *ngFor="let page of pages" class="background">
+        <button menuClose ion-button icon-left (click)="openPage(page)" class="side-menu-item-title">
+          <ion-icon name="{{page.icon}}"></ion-icon>
+          <div style="padding-left: 20px">{{page.title}}</div>
+        </button>
+      </ion-item>
+
+
+      <div class="side-menu-divider"></div>
+
+      <!--Subscriptions -->
+      <ion-item-group>
+        <ion-item-divider class="side-menu-subscriptions-group-title" light>Subscriptions</ion-item-divider>
+        <ion-item class="background">
+          <button menuClose ion-item *ngFor="let subscription of subscriptions" (click)="openPage(subscription)"
+                  class="side-menu-subscriptions-group-subscription-title">
+            {{subscription.title}}
+          </button>
+        </ion-item>
+
+      </ion-item-group>
     </ion-list>
+
   </ion-content>
 
 </ion-menu>

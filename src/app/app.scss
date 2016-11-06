@@ -1,6 +1,5 @@
 // http://ionicframework.com/docs/v2/theming/
 
-
 // App Global Sass
 // --------------------------------------------------
 // Put style rules here that you want to apply globally. These
@@ -19,9 +18,11 @@
 .toolbar-background {
   background-color: #243447;
 }
+
 .toolbar-title {
   color: white;
 }
+
 .bar-button {
   color: white;
 }
@@ -34,35 +35,87 @@
 .card {
   background-color: #1b2836;
 }
+
 .title {
   color: #ededed;
   font-size: 1.85rem;
 }
+
 .subreddit {
   color: #ff5252;
 }
+
 .url {
   color: #a0a2a7
 }
+
 .posted-time {
   color: #a0a2a7;
 }
+
 .upvotes {
   color: #a0a2a7;
   font-weight: 600;
   font-size: 1.60rem;
 }
+
 .comments {
   color: #a0a2a7;
   font-size: 1.60rem;
 }
+
 .link-flair {
   color: #a0a2a7;
 }
+
 .gilded {
   color: #F29010;
   font-size: 1.75rem;
 }
+
 .bullet {
   color: #a0a2a7;
+}
+
+//Side menu
+.side-menu-item-title {
+  color: #ededed;
+  padding: 0;
+  background-color: rgba(0, 0, 0, 0);
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0), 0 3px 1px -2px rgba(0, 0, 0, 0), 0 1px 5px 0 rgba(34, 34, 34, 0);
+  font-size: 1.6rem !important;
+  background-color: #17212d !important;
+  font-weight: 500;
+}
+
+.item-md.item-block .item-inner { // This removes the lines on the bottom of each item
+  border-bottom: 0;
+}
+
+.side-menu-item-icon {
+  color: white;
+  padding-left: 10px;
+  padding-top: 0px;
+  font-size: 20px;
+}
+
+.side-menu-subscriptions-group-title {
+  background-color: #17212d !important;
+  color: #a0a2a7 !important;
+  font-weight: 600;
+  border-bottom: 0 !important;
+  padding-left: 25px !important;
+}
+
+.side-menu-subscriptions-group-subscription-title {
+  background-color: #17212d !important;
+  color: #a0a2a7 !important;
+  border-bottom: 0 !important;
+}
+
+.side-menu-divider {
+  height: 1px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #263441;
 }
