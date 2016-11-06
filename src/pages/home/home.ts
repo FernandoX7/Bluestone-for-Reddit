@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import * as _ from 'lodash';
 import * as moment from 'moment';
-import {NavController, ModalController, Thumbnail} from 'ionic-angular';
+import {NavController, ModalController, NavParams} from 'ionic-angular';
 import {FeedService} from "./feed-service";
 import {HomeItemDetail} from "../home-item-detail/home-item-detail";
 import {ThumbnailImage} from "../popups/thumbnail-image";
@@ -17,13 +17,20 @@ export class Home implements OnInit {
   feed: any;
   randomPlaceholder: string;
 
-  constructor(public navCtrl: NavController, private data: FeedService, public modalCtrl: ModalController) {
+  constructor(public navCtrl: NavController, private data: FeedService, public modalCtrl: ModalController, private navParams: NavParams) {
 
   }
 
   ngOnInit() {
+    // Determine type of news feed to show
+    var typeOfPage = this.navParams.get('typeOfPage');
+    if (typeOfPage === undefined) {
+      typeOfPage = 'frontpage';
+    } else if (typeOfPage === null) {
+      typeOfPage = 'frontpage';
+    }
     this.data
-      .getFeed()
+      .getFeed(typeOfPage)
       .subscribe(
         data => {
           data = data.data.children;

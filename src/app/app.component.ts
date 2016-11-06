@@ -14,7 +14,7 @@ export class MyApp {
 
   rootPage: any = Home;
 
-  pages: Array<{title: string, component: any, icon: string}>;
+  pages: Array<{title: string, component: any, icon: string, typeOfPage: string}>;
   subscriptions: Array<{title: string}>;
 
   constructor(public platform: Platform) {
@@ -22,12 +22,12 @@ export class MyApp {
 
     // used for an example of ngFor and navigation
     this.pages = [
-      { title: 'Home', component: Home, icon: 'home' },
-      { title: 'Front page', component: Home, icon: 'trending-up' },
-      { title: 'All', component: Home, icon: 'podium' },
+      { title: 'Home', component: Home, icon: 'home', typeOfPage: 'frontpage' },
+      { title: 'Front page', component: Home, icon: 'trending-up', typeOfPage: 'frontpage' },
+      { title: 'All', component: Home, icon: 'podium', typeOfPage: 'all' },
       // New Line
-      { title: 'Search', component: Home, icon: 'search' },
-      { title: 'Settings', component: Home, icon: 'settings' },
+      { title: 'Search', component: Home, icon: 'search', typeOfPage: null },
+      { title: 'Settings', component: Home, icon: 'settings', typeOfPage: null },
     ];
 
     this.subscriptions = [
@@ -51,6 +51,8 @@ export class MyApp {
   openPage(page) {
     // Reset the content nav to have just this page
     // we wouldn't want the back button to show in this scenario
-    this.nav.setRoot(page.component);
+    this.nav.setRoot(page.component, {
+      typeOfPage: page.typeOfPage
+    });
   }
 }
