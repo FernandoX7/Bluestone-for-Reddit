@@ -128,6 +128,55 @@ export class Home implements OnInit {
     }
   }
 
+  // Update news feed based on new sub type
+  loadSubType(subType) {
+    this.data
+      .getSubTypeFeed(this.typeOfPage, subType)
+      .subscribe(
+        data => {
+          data = data.data.children;
+          this.feed = data;
+
+          // Add higher quality thumbnails
+          for (var i = 0; i < data.length; i++) {
+
+            // Get hours posted ago
+            this.feed[i].data['hoursAgo'] = this.getHoursAgo(this.feed[i].data.created_utc);
+
+            // If there's no .preview property - it's an all text post
+            if (typeof data[i].data.preview !== 'undefined') {
+              // Iterate through the resolutions array to find the highest resolution for that picture
+              var maximumResolution = 10;
+              var selectedItemsResolutions = data[i].data.preview.images[0].resolutions;
+
+              // Check if it's a gif
+              if (typeof data[i].data.preview.images[0].variants.gif !== 'undefined') {
+                var selectedItemsResolutionsGifs = data[i].data.preview.images[0].variants.gif.resolutions;
+                selectedItemsResolutions = selectedItemsResolutionsGifs;
+              }
+
+              while (maximumResolution > 0) {
+                if (typeof selectedItemsResolutions[maximumResolution] === 'undefined') {
+                  maximumResolution--;
+                } else {
+                  // Make the url actually point to the image and add it as a property to the object
+                  var thumbnailImageUrl = selectedItemsResolutions[maximumResolution].url;
+                  thumbnailImageUrl = _.replace(thumbnailImageUrl, new RegExp('&amp;', 'g'), '&');
+                  data[i].data['thumbnailImage'] = thumbnailImageUrl;
+                  break;
+                }
+              }
+            }
+          }
+
+          console.log('Subtype Feed data', data);
+        },
+        err => console.error('There was an error getting the subtype news feed', err),
+        () => console.log('Successfully got the subtype news feed')
+      );
+
+  }
+
   openSortingPopover(myEvent) {
     let popover = this.popoverCtrl.create(SortFeedPopover, {
       typeOfPage: this.typeOfPage,
@@ -142,6 +191,7 @@ export class Home implements OnInit {
 
       if (data) {
         this.subTypeOfPage = data.newSubTypeOfPage;
+        this.loadSubType(data.newSubTypeOfPage);
       }
 
     });
