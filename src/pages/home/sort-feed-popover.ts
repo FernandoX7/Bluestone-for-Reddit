@@ -13,22 +13,20 @@ export class SortFeedPopover {
 
   categories: any;
   typeOfPage: string;
-  callback: any;
+  subTypeOfPage: string;
 
   constructor(public viewCtrl: ViewController, public navParams: NavParams) {
-
     this.typeOfPage = this.navParams.get('typeOfPage');
-    console.log('Popovers type of page is: ', this.typeOfPage);
-    this.callback = this.navParams.get('cb');
-    console.log('first', this.callback);
-
+    this.subTypeOfPage = this.navParams.get('subCategory');
     this.categories = ['Hot','New','Rising','Controversial','Top']
-
   }
 
-  selectCategory(category) {
-    console.log(category.title);
-    this.viewCtrl.dismiss(category);
+  selectCategory(subType) {
+    this.viewCtrl.dismiss({
+      typeOfPage: this.typeOfPage,
+      subTypeOfPage: this.subTypeOfPage,
+      newSubTypeOfPage: subType
+    });
   }
 
 }

@@ -130,7 +130,8 @@ export class Home implements OnInit {
 
   openSortingPopover(myEvent) {
     let popover = this.popoverCtrl.create(SortFeedPopover, {
-      typeOfPage: this.typeOfPage
+      typeOfPage: this.typeOfPage,
+      subCategory: this.subTypeOfPage
     });
 
     popover.present({
@@ -138,12 +139,10 @@ export class Home implements OnInit {
     });
 
     popover.onDidDismiss(data => {
-      console.log("popover dismissed");
-      console.log("Selected Item is " + data);
 
-
-      //TODO: If a user clicks the popup and then closes out of it by clicking outsie the subtype gets set to null. Make it store the current one so that when it closes it keeps it
-        this.subTypeOfPage = data;
+      if (data) {
+        this.subTypeOfPage = data.newSubTypeOfPage;
+      }
 
     });
 
