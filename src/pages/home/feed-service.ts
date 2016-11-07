@@ -16,12 +16,46 @@ export class FeedService {
   }
 
   ngOnInit() {
-    this.getFeed();
+    this.getFeed('');
   }
 
-  getFeed() {
+  getTypeOfPage(typeOfPage, isGettingSubType) {
+    var type = '';
+    if (isGettingSubType) {
+      switch (typeOfPage) {
+        case 'Front page': // or Homepage
+          type = this.constants.URL;
+          break;
+        case 'All':
+          type = this.constants.URL2;
+          break;
+      }
+    } else {
+      switch (typeOfPage) {
+        case 'Front page': // or Homepage
+          type = this.constants.HOMEPAGE_NEWS_FEED;
+          break;
+        case 'All':
+          type = this.constants.ALL_NEWS_FEED;
+          break;
+      }
+    }
+    return type;
+  }
+
+  getFeed(typeOfPage) {
+   var type = this.getTypeOfPage(typeOfPage, false);
     return this.http
-      .get(this.constants.HOMEPAGE_NEWS_FEED)
+      .get(this.constants.URL +  type)
+      .map(res => res.json());
+  }
+
+  getSubTypeFeed(typeOfPage, subTypeOfPage) {
+    var type = this.getTypeOfPage(typeOfPage, true);
+    subTypeOfPage = subTypeOfPage.toLowerCase();
+    var feed = type + subTypeOfPage + this.constants.ENDING;
+    return this.http
+      .get(feed)
       .map(res => res.json());
   }
 
