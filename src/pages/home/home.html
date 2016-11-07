@@ -3,7 +3,22 @@
     <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
-    <ion-title>Home</ion-title>
+    <ion-title>
+      {{typeOfPage}}
+      <div style="font-size: 1.2rem">
+        {{subTypeOfPage}}<span>
+        <button class="sort-dropdown" ion-button icon-only (click)="openSortingPopover($event)">
+          <ion-icon name="md-arrow-dropdown"></ion-icon>
+        </button></span>
+      </div>
+    </ion-title>
+
+    <ion-buttons end>
+      <button ion-button icon-only>
+        <ion-icon name="more"></ion-icon>
+      </button>
+    </ion-buttons>
+
   </ion-navbar>
 </ion-header>
 

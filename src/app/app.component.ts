@@ -3,7 +3,6 @@ import { Nav, Platform } from 'ionic-angular';
 import { StatusBar, Splashscreen } from 'ionic-native';
 
 import { Home } from '../pages/home/home';
-import { HomeItemDetail } from '../pages/home-item-detail/home-item-detail';
 
 
 @Component({
@@ -22,9 +21,9 @@ export class MyApp {
 
     // used for an example of ngFor and navigation
     this.pages = [
-      { title: 'Home', component: Home, icon: 'home', typeOfPage: 'frontpage' },
-      { title: 'Front page', component: Home, icon: 'trending-up', typeOfPage: 'frontpage' },
-      { title: 'All', component: Home, icon: 'podium', typeOfPage: 'all' },
+      { title: 'Home', component: Home, icon: 'home', typeOfPage: 'Front page' },
+      { title: 'Front page', component: Home, icon: 'trending-up', typeOfPage: 'Front page' },
+      { title: 'All', component: Home, icon: 'podium', typeOfPage: 'All' },
       // New Line
       { title: 'Search', component: Home, icon: 'search', typeOfPage: null },
       { title: 'Settings', component: Home, icon: 'settings', typeOfPage: null },

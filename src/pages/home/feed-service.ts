@@ -24,22 +24,22 @@ export class FeedService {
     var type = '';
 
     switch (typeOfPage) {
-      case 'frontpage':
+      case 'Front page': // or Homepage
         type = this.constants.HOMEPAGE_NEWS_FEED;
         break;
-      case 'all':
+      case 'All':
         type = this.constants.ALL_NEWS_FEED;
         break;
-      case 'new':
+      case 'New':
         type = this.constants.NEW_NEWS_FEED;
         break;
-      case 'rising':
+      case 'Rising':
         type = this.constants.RISING_NEWS_FEED;
         break;
-      case 'controversial':
+      case 'Controversial':
         type = this.constants.CONTROVERSIAL_NEWS_FEED;
         break;
-      case 'top':
+      case 'Top':
         type = this.constants.TOP_NEWS_FEED;
         break;
     }

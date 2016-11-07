@@ -1,7 +1,7 @@
 /**
  * Created by fernando on 11/2/16.
  */
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {NavParams, ViewController} from 'ionic-angular';
 
 @Component({

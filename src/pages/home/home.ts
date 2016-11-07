@@ -1,11 +1,12 @@
 import {Component, OnInit} from '@angular/core';
 import * as _ from 'lodash';
 import * as moment from 'moment';
-import {NavController, ModalController, NavParams} from 'ionic-angular';
+import {NavController, ModalController, NavParams, PopoverController} from 'ionic-angular';
 import {FeedService} from "./feed-service";
 import {HomeItemDetail} from "../home-item-detail/home-item-detail";
 import {ThumbnailImage} from "../popups/thumbnail-image";
 import {SubredditSearch} from "../subreddit-search/subreddit-search";
+import {SortFeedPopover} from "./sort-feed-popover";
 
 @Component({
   selector: 'page-home',
@@ -16,21 +17,23 @@ export class Home implements OnInit {
 
   feed: any;
   randomPlaceholder: string;
+  typeOfPage: string;
+  subTypeOfPage: any;
 
-  constructor(public navCtrl: NavController, private data: FeedService, public modalCtrl: ModalController, private navParams: NavParams) {
-
+  constructor(public navCtrl: NavController, private data: FeedService, public modalCtrl: ModalController, private navParams: NavParams, public popoverCtrl: PopoverController) {
   }
 
   ngOnInit() {
     // Determine type of news feed to show
-    var typeOfPage = this.navParams.get('typeOfPage');
-    if (typeOfPage === undefined) {
-      typeOfPage = 'frontpage';
-    } else if (typeOfPage === null) {
-      typeOfPage = 'frontpage';
+    this.typeOfPage = this.navParams.get('typeOfPage');
+    this.subTypeOfPage = 'Hot'; // Front page
+    if (this.typeOfPage === undefined) {
+      this.typeOfPage = 'Front page';
+    } else if (this.typeOfPage === null) {
+      this.typeOfPage = 'Front page';
     }
     this.data
-      .getFeed(typeOfPage)
+      .getFeed(this.typeOfPage)
       .subscribe(
         data => {
           data = data.data.children;
@@ -123,6 +126,27 @@ export class Home implements OnInit {
       var yearsAgo = currentTime.diff(createdAt, 'years');
       return yearsAgo + 'y';
     }
+  }
+
+  openSortingPopover(myEvent) {
+    let popover = this.popoverCtrl.create(SortFeedPopover, {
+      typeOfPage: this.typeOfPage
+    });
+
+    popover.present({
+      ev: myEvent
+    });
+
+    popover.onDidDismiss(data => {
+      console.log("popover dismissed");
+      console.log("Selected Item is " + data);
+
+
+      //TODO: If a user clicks the popup and then closes out of it by clicking outsie the subtype gets set to null. Make it store the current one so that when it closes it keeps it
+        this.subTypeOfPage = data;
+
+    });
+
   }
 
 }
