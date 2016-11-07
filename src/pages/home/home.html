@@ -5,13 +5,14 @@
     </button>
     <ion-title>
       {{typeOfPage}}
-      <div style="font-size: 1.2rem" (click)="openSortingPopover($event)">
-        {{subTypeOfPage}}<span>
-        <button class="sort-dropdown" ion-button icon-only>
-          <ion-icon name="md-arrow-dropdown"></ion-icon>
-        </button></span>
+      <div style="font-size: 1.35rem" >
+        {{subTypeOfPage}}
       </div>
     </ion-title>
+
+      <button class="dropdown-button" ion-button icon-only (click)="openSortingPopover($event)">
+        <ion-icon name="md-arrow-dropdown"></ion-icon>
+      </button>
 
     <ion-buttons end>
       <button ion-button icon-only>
