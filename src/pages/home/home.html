@@ -25,13 +25,6 @@
 
 <ion-content class="background">
 
-  <ion-searchbar class="search-bar"
-                 (ionInput)="getItems($event)"
-                 placeholder="{{randomPlaceholder}}"
-                 debounce="600"
-                 (ionClear)="clearItems()"
-  ></ion-searchbar>
-
   <ion-list>
 
     <ion-card class="card" *ngFor="let feedItem of feed">

@@ -5,7 +5,6 @@ import {NavController, ModalController, NavParams, PopoverController} from 'ioni
 import {FeedService} from "./feed-service";
 import {HomeItemDetail} from "../home-item-detail/home-item-detail";
 import {ThumbnailImage} from "../popups/thumbnail-image";
-import {SubredditSearch} from "../subreddit-search/subreddit-search";
 import {SortFeedPopover} from "./sort-feed-popover";
 
 @Component({
@@ -16,7 +15,6 @@ import {SortFeedPopover} from "./sort-feed-popover";
 export class Home implements OnInit {
 
   feed: any;
-  randomPlaceholder: string;
   typeOfPage: string;
   subTypeOfPage: any;
 
@@ -77,8 +75,6 @@ export class Home implements OnInit {
         () => console.log('Successfully got the news feed')
       );
 
-    this.getPlaceholder();
-
   }
 
   goToItemDetail(item) {
@@ -92,25 +88,6 @@ export class Home implements OnInit {
       image: feedItem.data.thumbnailImage
     });
     thumbnailPopup.present();
-  }
-
-  getItems(event: any) {
-    // set val to the value of the searchbar
-    let searchValue = event.target.value;
-    console.log(searchValue);
-    this.navCtrl.push(SubredditSearch, {
-      searchValue: searchValue
-    });
-  }
-
-  getPlaceholder() {
-    var searches = ['camaro', 'AskReddit', 'politics', 'android', 'iOS',
-      'pics', 'funny', 'nfl', 'gaming', 'WTF', 'movies'];
-    this.randomPlaceholder = searches[Math.floor(Math.random() * searches.length)];
-  }
-
-  clearItems() {
-    this.getPlaceholder();
   }
 
   private getHoursAgo(created_utc: any) {

@@ -1,8 +1,9 @@
 import { Component, ViewChild } from '@angular/core';
-import {Nav, Platform, AlertController} from 'ionic-angular';
+import {Nav, Platform, AlertController, NavController} from 'ionic-angular';
 import { StatusBar, Splashscreen } from 'ionic-native';
 
 import { Home } from '../pages/home/home';
+import {SubredditSearch} from "../pages/subreddit-search/subreddit-search";
 
 
 @Component({
@@ -61,13 +62,17 @@ export class MyApp {
         {
           text: 'User',
           handler: data => {
-            console.log('Searching for user');
+            // this.nav.push(UserSearch, {
+            //   searchValue: data.title
+            // });
           }
         },
         {
           text: 'Subreddit',
           handler: data => {
-            console.log('Searching for subreddit');
+            this.nav.push(SubredditSearch, {
+              searchValue: data.title
+            });
           }
         }
       ]
