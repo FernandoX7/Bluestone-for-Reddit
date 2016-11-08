@@ -30,6 +30,12 @@ $colors: (
   dark:       #222
 );
 
+// Alert Dialog
+$alert-md-background-color: #1b2836;
+$alert-md-input-text-color: #d6d8dd;
+$alert-md-input-border-color-focused: #ff5252;
+$alert-md-button-text-color: #ff5252;
+// The alert dialog title is in app.scss as '.alert-dialog'
 
 // App iOS Variables
 // --------------------------------------------------

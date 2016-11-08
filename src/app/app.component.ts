@@ -1,8 +1,9 @@
 import { Component, ViewChild } from '@angular/core';
-import { Nav, Platform } from 'ionic-angular';
+import {Nav, Platform, AlertController, NavController} from 'ionic-angular';
 import { StatusBar, Splashscreen } from 'ionic-native';
 
 import { Home } from '../pages/home/home';
+import {SubredditSearch} from "../pages/subreddit-search/subreddit-search";
 
 
 @Component({
@@ -16,7 +17,7 @@ export class MyApp {
   pages: Array<{title: string, component: any, icon: string, typeOfPage: string}>;
   subscriptions: Array<{title: string}>;
 
-  constructor(public platform: Platform) {
+  constructor(public platform: Platform, public alertCtrl: AlertController) {
     this.initializeApp();
 
     // used for an example of ngFor and navigation
@@ -47,11 +48,45 @@ export class MyApp {
     });
   }
 
-  openPage(page) {
-    // Reset the content nav to have just this page
-    // we wouldn't want the back button to show in this scenario
-    this.nav.setRoot(page.component, {
-      typeOfPage: page.typeOfPage
+  showSearchPrompt() {
+    let prompt = this.alertCtrl.create({
+      title: 'Search',
+      cssClass: 'alert-dialog',
+      inputs: [
+        {
+          name: 'title',
+          placeholder: 'Subreddit or User'
+        },
+      ],
+      buttons: [
+        {
+          text: 'User',
+          handler: data => {
+            // this.nav.push(UserSearch, {
+            //   searchValue: data.title
+            // });
+          }
+        },
+        {
+          text: 'Subreddit',
+          handler: data => {
+            this.nav.push(SubredditSearch, {
+              searchValue: data.title
+            });
+          }
+        }
+      ]
     });
+    prompt.present();
+  }
+
+  openPage(page) {
+    if (page.title === 'Search') {
+      this.showSearchPrompt();
+    } else {
+      this.nav.setRoot(page.component, {
+        typeOfPage: page.typeOfPage
+      });
+    }
   }
 }

@@ -80,7 +80,9 @@
 //Side menu
 .side-menu-item-title {
   color: #ededed;
+  width: 100%;
   padding: 0;
+  text-align: left;
   background-color: rgba(0, 0, 0, 0);
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0), 0 3px 1px -2px rgba(0, 0, 0, 0), 0 1px 5px 0 rgba(34, 34, 34, 0);
   font-size: 1.6rem !important;
@@ -118,4 +120,17 @@
   margin-top: 10px;
   margin-bottom: 10px;
   border-bottom: 1px solid #263441;
+}
+.search-dropdown-icon {
+  margin-left: 54% !important;
+}
+
+// Alert Dialog - The rest is in theme/variables.scss
+.alert-dialog {
+  color: white;
+}
+
+// Search FAB
+.search-fab {
+  background-color: #ff5252 !important;
 }

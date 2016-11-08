@@ -25,12 +25,9 @@
 
 <ion-content class="background">
 
-  <ion-searchbar class="search-bar"
-                 (ionInput)="getItems($event)"
-                 placeholder="{{randomPlaceholder}}"
-                 debounce="600"
-                 (ionClear)="clearItems()"
-  ></ion-searchbar>
+  <ion-fab right bottom>
+    <button ion-fab class="search-fab" (click)="showSearchPrompt()"><ion-icon name="search"></ion-icon></button>
+  </ion-fab>
 
   <ion-list>
 
