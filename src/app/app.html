@@ -10,12 +10,10 @@
       <!--Side menu-->
       <ion-item *ngFor="let page of pages" class="background" style="margin-left: 4%;">
         <button menuClose icon-left (click)="openPage(page)" class="side-menu-item-title">
-        <ion-icon name="{{page.icon}}" item-left></ion-icon>
+          <ion-icon name="{{page.icon}}" item-left></ion-icon>
           {{page.title}}
-        <ion-icon class="search-dropdown-icon" *ngIf="page.title === 'Search'" name="ios-arrow-down" item-right></ion-icon>
-          </button>
+        </button>
       </ion-item>
-
 
       <div class="side-menu-divider"></div>
 
