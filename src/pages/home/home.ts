@@ -1,11 +1,12 @@
 import {Component, OnInit} from '@angular/core';
 import * as _ from 'lodash';
 import * as moment from 'moment';
-import {NavController, ModalController, NavParams, PopoverController} from 'ionic-angular';
+import {NavController, ModalController, NavParams, PopoverController, AlertController} from 'ionic-angular';
 import {FeedService} from "./feed-service";
 import {HomeItemDetail} from "../home-item-detail/home-item-detail";
 import {ThumbnailImage} from "../popups/thumbnail-image";
 import {SortFeedPopover} from "./sort-feed-popover";
+import {SubredditSearch} from "../subreddit-search/subreddit-search";
 
 @Component({
   selector: 'page-home',
@@ -18,7 +19,7 @@ export class Home implements OnInit {
   typeOfPage: string;
   subTypeOfPage: any;
 
-  constructor(public navCtrl: NavController, private data: FeedService, public modalCtrl: ModalController, private navParams: NavParams, public popoverCtrl: PopoverController) {
+  constructor(public navCtrl: NavController, private data: FeedService, public modalCtrl: ModalController, private navParams: NavParams, public popoverCtrl: PopoverController, public alertCtrl: AlertController) {
   }
 
   ngOnInit() {
@@ -152,6 +153,38 @@ export class Home implements OnInit {
         () => console.log('Successfully got the subtype news feed')
       );
 
+  }
+
+  showSearchPrompt() {
+    let prompt = this.alertCtrl.create({
+      title: 'Search',
+      cssClass: 'alert-dialog',
+      inputs: [
+        {
+          name: 'title',
+          placeholder: 'Subreddit or User'
+        },
+      ],
+      buttons: [
+        {
+          text: 'User',
+          handler: data => {
+            // this.nav.push(UserSearch, {
+            //   searchValue: data.title
+            // });
+          }
+        },
+        {
+          text: 'Subreddit',
+          handler: data => {
+            this.navCtrl.push(SubredditSearch, {
+              searchValue: data.title
+            });
+          }
+        }
+      ]
+    });
+    prompt.present();
   }
 
   openSortingPopover(myEvent) {

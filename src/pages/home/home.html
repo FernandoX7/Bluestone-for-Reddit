@@ -25,6 +25,10 @@
 
 <ion-content class="background">
 
+  <ion-fab right bottom>
+    <button ion-fab class="search-fab" (click)="showSearchPrompt()"><ion-icon name="search"></ion-icon></button>
+  </ion-fab>
+
   <ion-list>
 
     <ion-card class="card" *ngFor="let feedItem of feed">
