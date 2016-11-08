@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { Nav, Platform } from 'ionic-angular';
+import {Nav, Platform, AlertController} from 'ionic-angular';
 import { StatusBar, Splashscreen } from 'ionic-native';
 
 import { Home } from '../pages/home/home';
@@ -16,7 +16,7 @@ export class MyApp {
   pages: Array<{title: string, component: any, icon: string, typeOfPage: string}>;
   subscriptions: Array<{title: string}>;
 
-  constructor(public platform: Platform) {
+  constructor(public platform: Platform, public alertCtrl: AlertController) {
     this.initializeApp();
 
     // used for an example of ngFor and navigation
@@ -47,9 +47,37 @@ export class MyApp {
     });
   }
 
+  showSearchPrompt() {
+    let prompt = this.alertCtrl.create({
+      title: 'Search',
+      cssClass: 'alert-dialog',
+      inputs: [
+        {
+          name: 'title',
+          placeholder: 'Subreddit or User'
+        },
+      ],
+      buttons: [
+        {
+          text: 'User',
+          handler: data => {
+            console.log('Searching for user');
+          }
+        },
+        {
+          text: 'Subreddit',
+          handler: data => {
+            console.log('Searching for subreddit');
+          }
+        }
+      ]
+    });
+    prompt.present();
+  }
+
   openPage(page) {
     if (page.title === 'Search') {
-      console.log('open search popover');
+      this.showSearchPrompt();
     } else {
       this.nav.setRoot(page.component, {
         typeOfPage: page.typeOfPage
