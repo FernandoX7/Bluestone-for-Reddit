@@ -25,4 +25,12 @@ export class GetUserService {
       .map(res => res.json());
   }
 
+  getUserSorted(user, subTypeOfPage) {
+    subTypeOfPage = subTypeOfPage.toLowerCase();
+    var feed = this.constants.GET_USER + user + '/' + subTypeOfPage + this.constants.ENDING;
+    return this.http
+      .get(feed)
+      .map(res => res.json());
+  }
+
 }
