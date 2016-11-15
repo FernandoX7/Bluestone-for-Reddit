@@ -1,5 +1,5 @@
 /**
- * Created by fernando on 11/2/16.
+ * Created by fernando on 11/15/16.
  */
 import {Injectable} from '@angular/core';
 import {Http} from '@angular/http';
@@ -7,7 +7,7 @@ import 'rxjs/add/operator/map';
 import {Constants} from "../util/Constants";
 
 @Injectable()
-export class GetSubredditService {
+export class GetUserService {
 
   http: any;
 
@@ -16,12 +16,12 @@ export class GetSubredditService {
   }
 
   ngOnInit() {
-    this.getSubreddit('');
+    this.getUser('');
   }
 
-  getSubreddit(subreddit) {
+  getUser(user) {
     return this.http
-      .get(this.constants.GET_SUBREDDIT + subreddit + this.constants.ENDING)
+      .get(this.constants.GET_USER + user + this.constants.ENDING)
       .map(res => res.json());
   }
 

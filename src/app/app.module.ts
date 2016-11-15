@@ -9,6 +9,7 @@ import {ThumbnailImage} from "../pages/popups/thumbnail-image";
 import {SubredditSearch} from "../pages/subreddit-search/subreddit-search";
 import {GetSubredditService} from "../pages/subreddit-search/get-subreddit-service";
 import {SortFeedPopover} from "../pages/home/sort-feed-popover";
+import {UserSearch} from "../pages/user-search/user-search";
 
 @NgModule({
   declarations: [
@@ -17,7 +18,8 @@ import {SortFeedPopover} from "../pages/home/sort-feed-popover";
     HomeItemDetail,
     ThumbnailImage,
     SubredditSearch,
-    SortFeedPopover
+    SortFeedPopover,
+    UserSearch
   ],
   imports: [
     IonicModule.forRoot(MyApp, { mode: 'md' })
@@ -29,7 +31,8 @@ import {SortFeedPopover} from "../pages/home/sort-feed-popover";
     HomeItemDetail,
     ThumbnailImage,
     SubredditSearch,
-    SortFeedPopover
+    SortFeedPopover,
+    UserSearch
   ],
   providers: [FeedService, Constants, GetSubredditService]
 })
