@@ -66,7 +66,23 @@ export class UserSearch implements OnInit {
               if (typeof data[i].data.preview.images[0].variants.gif !== 'undefined') {
                 var selectedItemsResolutionsGifs = data[i].data.preview.images[0].variants.gif.resolutions;
                 selectedItemsResolutions = selectedItemsResolutionsGifs;
+
+                while (maximumResolution > 0) {
+                  if (typeof selectedItemsResolutions[maximumResolution] === 'undefined') {
+                    maximumResolution--;
+                  } else {
+                    // Make the url actually point to the image and add it as a property to the object
+                    var thumbnailImageUrl = selectedItemsResolutions[maximumResolution].url;
+                    thumbnailImageUrl = _.replace(thumbnailImageUrl, new RegExp('&amp;', 'g'), '&');
+                    data[i].data['gifImage'] = thumbnailImageUrl;
+                    break;
+                  }
+                }
+
               }
+
+              // Reset variable back to normal images not gifs
+              selectedItemsResolutions = data[i].data.preview.images[0].resolutions;
 
               while (maximumResolution > 0) {
                 if (typeof selectedItemsResolutions[maximumResolution] === 'undefined') {
@@ -82,6 +98,7 @@ export class UserSearch implements OnInit {
             }
           }
 
+          console.log('Feed data', data);
         },
         err => console.error('There was an error getting the searched user', err),
         () => console.log('Successfully got the searched user')
@@ -128,7 +145,23 @@ export class UserSearch implements OnInit {
               if (typeof data[i].data.preview.images[0].variants.gif !== 'undefined') {
                 var selectedItemsResolutionsGifs = data[i].data.preview.images[0].variants.gif.resolutions;
                 selectedItemsResolutions = selectedItemsResolutionsGifs;
+
+                while (maximumResolution > 0) {
+                  if (typeof selectedItemsResolutions[maximumResolution] === 'undefined') {
+                    maximumResolution--;
+                  } else {
+                    // Make the url actually point to the image and add it as a property to the object
+                    var thumbnailImageUrl = selectedItemsResolutions[maximumResolution].url;
+                    thumbnailImageUrl = _.replace(thumbnailImageUrl, new RegExp('&amp;', 'g'), '&');
+                    data[i].data['gifImage'] = thumbnailImageUrl;
+                    break;
+                  }
+                }
+
               }
+
+              // Reset variable back to normal images not gifs
+              selectedItemsResolutions = data[i].data.preview.images[0].resolutions;
 
               while (maximumResolution > 0) {
                 if (typeof selectedItemsResolutions[maximumResolution] === 'undefined') {
@@ -144,6 +177,7 @@ export class UserSearch implements OnInit {
             }
           }
 
+          console.log('Feed data', data);
         },
         err => console.error('There was an error getting the searched user', err),
         () => console.log('Successfully got the searched user')
@@ -158,9 +192,17 @@ export class UserSearch implements OnInit {
   }
 
   openImage(feedItem) {
-    let thumbnailPopup = this.modalCtrl.create(ThumbnailImage, {
-      image: feedItem.data.thumbnailImage
-    });
+    let thumbnailPopup: any;
+    // Check if its a gif
+    if (feedItem.data.hasOwnProperty('gifImage')) {
+      thumbnailPopup = this.modalCtrl.create(ThumbnailImage, {
+        image: feedItem.data.gifImage
+      });
+    } else {
+      thumbnailPopup = this.modalCtrl.create(ThumbnailImage, {
+        image: feedItem.data.thumbnailImage
+      });
+    }
     thumbnailPopup.present();
   }
 
