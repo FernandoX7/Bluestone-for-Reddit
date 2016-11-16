@@ -111,9 +111,17 @@ export class Home implements OnInit {
   }
 
   openImage(feedItem) {
-    let thumbnailPopup = this.modalCtrl.create(ThumbnailImage, {
-      image: feedItem.data.thumbnailImage
-    });
+    let thumbnailPopup: any;
+    // Check if its a gif
+    if (feedItem.data.hasOwnProperty('gifImage')) {
+      thumbnailPopup = this.modalCtrl.create(ThumbnailImage, {
+        image: feedItem.data.gifImage
+      });
+    } else {
+      thumbnailPopup = this.modalCtrl.create(ThumbnailImage, {
+        image: feedItem.data.thumbnailImage
+      });
+    }
     thumbnailPopup.present();
   }
 
