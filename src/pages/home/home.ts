@@ -1,7 +1,10 @@
 import {Component, OnInit} from '@angular/core';
 import * as _ from 'lodash';
 import * as moment from 'moment';
-import {NavController, ModalController, NavParams, PopoverController, AlertController} from 'ionic-angular';
+import {
+  NavController, ModalController, NavParams, PopoverController, AlertController,
+  LoadingController
+} from 'ionic-angular';
 import {FeedService} from "./feed-service";
 import {HomeItemDetail} from "../home-item-detail/home-item-detail";
 import {ThumbnailImage} from "../popups/thumbnail-image";
@@ -20,10 +23,15 @@ export class Home implements OnInit {
   typeOfPage: string;
   subTypeOfPage: any;
 
-  constructor(public navCtrl: NavController, private data: FeedService, public modalCtrl: ModalController, private navParams: NavParams, public popoverCtrl: PopoverController, public alertCtrl: AlertController) {
+  constructor(public navCtrl: NavController, private data: FeedService, public modalCtrl: ModalController, private navParams: NavParams, public popoverCtrl: PopoverController, public alertCtrl: AlertController, public loadingCtrl: LoadingController) {
   }
 
   ngOnInit() {
+    let loader = this.loadingCtrl.create({
+      content: "Please wait...",
+      duration: 3000
+    });
+    loader.present();
     // Determine type of news feed to show
     this.typeOfPage = this.navParams.get('typeOfPage');
     this.subTypeOfPage = 'Hot'; // Front page
@@ -36,6 +44,7 @@ export class Home implements OnInit {
       .getFeed(this.typeOfPage)
       .subscribe(
         data => {
+          loader.dismissAll();
           data = data.data.children;
           this.feed = data;
 
@@ -109,10 +118,16 @@ export class Home implements OnInit {
 
   // Update news feed based on new sub type
   loadSubType(subType) {
+    let loader = this.loadingCtrl.create({
+      content: "Please wait...",
+      duration: 3000
+    });
+    loader.present();
     this.data
       .getSubTypeFeed(this.typeOfPage, subType)
       .subscribe(
         data => {
+          loader.dismissAll();
           data = data.data.children;
           this.feed = data;
 

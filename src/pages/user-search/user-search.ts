@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {NavController, NavParams, ModalController, PopoverController} from 'ionic-angular';
+import {NavController, NavParams, ModalController, PopoverController, LoadingController} from 'ionic-angular';
 import * as _ from 'lodash';
 import * as moment from 'moment';
 import {GetUserService} from "./get-user-service";
@@ -21,11 +21,16 @@ export class UserSearch implements OnInit {
   subTypeOfPage: any;
   isThereData: boolean;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private data: GetUserService, public modalCtrl: ModalController, public popoverCtrl: PopoverController) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, private data: GetUserService, public modalCtrl: ModalController, public popoverCtrl: PopoverController, public loadingCtrl: LoadingController) {
     this.passedUserName = navParams.get('searchValue');
   }
 
   ngOnInit() {
+    let loader = this.loadingCtrl.create({
+      content: "Please wait...",
+      duration: 3000
+    });
+    loader.present();
     // Determine type of news feed to show
     this.typeOfPage = this.navParams.get('typeOfPage');
     this.subTypeOfPage = 'Overview'; // Default
@@ -33,6 +38,7 @@ export class UserSearch implements OnInit {
       .getUser(this.passedUserName)
       .subscribe(
         data => {
+          loader.dismissAll();
           data = data.data.children;
           this.feed = data;
           console.log(this.passedUserName, 'data:', data);
@@ -85,10 +91,16 @@ export class UserSearch implements OnInit {
 
   // Update news feed based on new sub type
   loadSubType(subType) {
+    let loader = this.loadingCtrl.create({
+      content: "Please wait...",
+      duration: 3000
+    });
+    loader.present();
     this.data
       .getUserSorted(this.passedUserName, subType)
       .subscribe(
         data => {
+          loader.dismissAll();
           data = data.data.children;
           this.feed = data;
           console.log(this.passedUserName, 'data:', data);
