@@ -44,18 +44,23 @@
 //Card
 .card {
   background-color: #1b2836;
-  max-height: 138px;
+  max-height: 165px;
+}
+
+.card-detail-view {
+  max-height: none;
 }
 
 .thumbnail-column {
-  max-height: 138px;
-  padding: 0;
+  -webkit-background-size: cover;
+  background-size: cover;
+  background-position: center;
 }
 
 .thumbnail {
   display: inline-block;
   height: 100%;
-  max-height: 138px;
+  max-height: 165px;
 }
 
 .title {
