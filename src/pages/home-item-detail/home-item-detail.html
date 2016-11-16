@@ -9,7 +9,7 @@
 
 <ion-content class="background">
 
-  <ion-card class="card" *ngIf="selectedItem.data.thumbnail !== 'default' && selectedItem.data.thumbnail !== 'self'">
+  <ion-card class="card" *ngIf="selectedItem.data.thumbnail !== 'default' && selectedItem.data.thumbnail !== 'self' || selectedItem.data.hasOwnProperty('thumbnailImage')">
   <img class="header-image" src="{{selectedItem.data.headerImage}}">
   </ion-card>
 

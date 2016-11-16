@@ -21,7 +21,7 @@ export class GetSubredditService {
 
   getSubreddit(subreddit) {
     return this.http
-      .get(this.constants.GET_SUBREDDIT + subreddit + '.json')
+      .get(this.constants.GET_SUBREDDIT + subreddit + this.constants.ENDING)
       .map(res => res.json());
   }
 

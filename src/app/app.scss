@@ -77,6 +77,17 @@
   color: #a0a2a7;
 }
 
+.no-data-dialog {
+  color: #a0a2a7;
+  font-size: 1.40rem;
+  position: fixed;
+  top: 25%;
+  text-align: center;
+  left: 50%;
+  width: 100%;
+  transform: translate(-50%, -350%);
+}
+
 //Side menu
 .side-menu-item-title {
   color: #ededed;

@@ -1,0 +1,65 @@
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>
+      {{passedUserName}}
+      <div style="font-size: 1.35rem" >
+        {{subTypeOfPage}}
+      </div>
+    </ion-title>
+
+    <button class="dropdown-button" ion-button icon-only (click)="openSortingPopover($event)">
+      <ion-icon name="md-arrow-dropdown"></ion-icon>
+    </button>
+
+  </ion-navbar>
+</ion-header>
+
+<ion-content class="background">
+
+  <ion-list>
+
+    <div class="no-data-dialog" *ngIf="isThereData === false">There doesn't appear to be anything here</div>
+
+    <ion-card class="card" *ngFor="let feedItem of feed">
+      <ion-row>
+        <ion-col padding (click)="goToItemDetail(feedItem)">
+          <span *ngIf="feedItem.data.title != undefined" class="title">{{feedItem.data.title | slice: 0:90 }}</span>
+          <span *ngIf="feedItem.data.link_title != undefined"
+                class="title">{{feedItem.data.link_title | slice: 0:90 }}</span>
+          <span *ngIf="feedItem.data.title != undefined && feedItem.data.title.length > 90" class="title">...</span>
+          <span *ngIf="feedItem.data.link_title != undefined && feedItem.data.link_title.length > 90"
+                class="title">...</span>
+          <br/>
+
+          <span *ngIf="feedItem.data.hasOwnProperty('body')" class="comment-body">{{feedItem.data.body | slice: 0:150}}</span>
+          <span *ngIf="feedItem.data.hasOwnProperty('body') && feedItem.data.body.length > 150" class="comment-body">...</span>
+          <br/>
+
+          <span class="subreddit">{{feedItem.data.subreddit}}</span>
+          <span *ngIf="feedItem.data.hasOwnProperty('link_flair_text') && feedItem.data.link_flair_text !== null"
+                class="bullet">&sdot;</span>
+          <span *ngIf="feedItem.data.hasOwnProperty('link_flair_text')" class="link-flair">{{feedItem.data.link_flair_text}}</span>
+          <span *ngIf="feedItem.data.hasOwnProperty('link_flair_text')" class="bullet">&sdot;</span>
+          <span class="url">{{feedItem.data.domain}}</span>
+          <span class="bullet">&sdot;</span>
+          <span class="posted-time">{{feedItem.data.hoursAgo}}</span>
+          <br/>
+          <span class="upvotes">{{feedItem.data.ups}}</span>
+          <span class="bullet">&sdot;</span>
+          <span *ngIf="feedItem.data.hasOwnProperty('num_comments')" class="comments">{{feedItem.data.num_comments}} comments</span>
+          <span *ngIf="!feedItem.data.hasOwnProperty('num_comments')" class="comments">comments not available</span>
+          <span class="gilded" *ngIf="feedItem.data.gilded > 0">&nbsp;x{{feedItem.data.gilded}}</span>
+        </ion-col>
+        <ion-col *ngIf="feedItem.data.hasOwnProperty('thumbnailImage')" width-33
+                 (click)="openImage(feedItem)">
+          <img class="thumbnail" src="{{feedItem.data.thumbnailImage}}">
+        </ion-col>
+      </ion-row>
+    </ion-card>
+
+  </ion-list>
+
+</ion-content>
