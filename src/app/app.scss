@@ -27,6 +27,16 @@
   color: white;
 }
 
+.toolbar-title-column {
+  flex: 0;
+  -webkit-flex: 0;
+}
+
+.dropdown-button {
+  background-color: transparent !important;
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0), 0 3px 1px -2px rgba(0, 0, 0, 0), 0 1px 5px 0 rgba(0, 0, 0, 0) !important;
+}
+
 .background {
   background-color: #17212d;
 }
