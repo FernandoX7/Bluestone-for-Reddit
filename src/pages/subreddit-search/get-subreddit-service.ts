@@ -25,4 +25,12 @@ export class GetSubredditService {
       .map(res => res.json());
   }
 
+  getSortedSubreddit(subreddit, subTypeOfPage) {
+    subTypeOfPage = subTypeOfPage.toLowerCase();
+    var feed = this.constants.GET_SUBREDDIT + subreddit + this.constants.AND + subTypeOfPage + this.constants.ENDING;
+    return this.http
+      .get(feed)
+      .map(res => res.json());
+  }
+
 }

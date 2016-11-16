@@ -11,6 +11,7 @@ import {GetSubredditService} from "../pages/subreddit-search/get-subreddit-servi
 import {SortFeedPopover} from "../pages/home/sort-feed-popover";
 import {UserSearch} from "../pages/user-search/user-search";
 import {SortUserFeedPopover} from "../pages/user-search/sort-user-feed-popover";
+import {SortSearchedSubredditPopover} from "../pages/subreddit-search/sort-searched-subreddit-popover";
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import {SortUserFeedPopover} from "../pages/user-search/sort-user-feed-popover";
     SubredditSearch,
     SortFeedPopover,
     UserSearch,
-    SortUserFeedPopover
+    SortUserFeedPopover,
+    SortSearchedSubredditPopover
   ],
   imports: [
     IonicModule.forRoot(MyApp, { mode: 'md' })
@@ -35,7 +37,8 @@ import {SortUserFeedPopover} from "../pages/user-search/sort-user-feed-popover";
     SubredditSearch,
     SortFeedPopover,
     UserSearch,
-    SortUserFeedPopover
+    SortUserFeedPopover,
+    SortSearchedSubredditPopover
   ],
   providers: [FeedService, Constants, GetSubredditService]
 })

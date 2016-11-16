@@ -3,11 +3,23 @@
     <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
-    <ion-title>r/{{passedSubredditName}}</ion-title>
+    <ion-title>
+      r/{{passedSubredditName}}
+      <div style="font-size: 1.35rem" >
+        {{subTypeOfPage}}
+      </div>
+    </ion-title>
+
+    <button class="dropdown-button" ion-button icon-only (click)="openSortingPopover($event)">
+      <ion-icon name="md-arrow-dropdown"></ion-icon>
+    </button>
+
   </ion-navbar>
 </ion-header>
 
 <ion-content class="background">
+
+  <div class="no-data-dialog" *ngIf="isThereData === false">There doesn't appear to be anything here</div>
 
   <ion-list>
 
