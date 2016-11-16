@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {NavController, NavParams, ModalController} from 'ionic-angular';
+import {NavController, NavParams, ModalController, LoadingController} from 'ionic-angular';
 import {GetSubredditService} from "./get-subreddit-service";
 import * as _ from 'lodash';
 import * as moment from 'moment';
@@ -17,16 +17,21 @@ export class SubredditSearch implements OnInit {
   passedSubredditName: string;
   feed: any;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private data: GetSubredditService, public modalCtrl: ModalController) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, private data: GetSubredditService, public modalCtrl: ModalController, public loadingCtrl: LoadingController) {
     this.passedSubredditName = navParams.get('searchValue');
   }
 
   ngOnInit() {
-
+    let loader = this.loadingCtrl.create({
+      content: "Please wait...",
+      duration: 3000
+    });
+    loader.present();
     this.data
       .getSubreddit(this.passedSubredditName)
       .subscribe(
         data => {
+          loader.dismissAll();
           data = data.data.children;
           this.feed = data;
           console.log(this.passedSubredditName, 'data:', data);
