@@ -3,16 +3,23 @@
     <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
-    <ion-title>
-      {{passedUserName}}
-      <div style="font-size: 1.35rem" >
-        {{subTypeOfPage}}
-      </div>
-    </ion-title>
-
-    <button class="dropdown-button" ion-button icon-only (click)="openSortingPopover($event)">
-      <ion-icon name="md-arrow-dropdown"></ion-icon>
-    </button>
+    <ion-grid>
+      <ion-row>
+        <ion-col class="toolbar-title-column">
+          <ion-title>
+            {{passedUserName}}
+            <div style="font-size: 1.35rem" >
+              {{subTypeOfPage}}
+            </div>
+          </ion-title>
+        </ion-col>
+        <ion-col>
+          <button class="dropdown-button" ion-button icon-only (click)="openSortingPopover($event)">
+            <ion-icon name="md-arrow-dropdown"></ion-icon>
+          </button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
 
   </ion-navbar>
 </ion-header>
