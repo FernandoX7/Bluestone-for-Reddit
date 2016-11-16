@@ -43,7 +43,7 @@
 
           <span *ngIf="feedItem.data.hasOwnProperty('body')" class="comment-body">{{feedItem.data.body | slice: 0:75}}</span>
           <span *ngIf="feedItem.data.hasOwnProperty('body') && feedItem.data.body.length > 75" class="comment-body">...</span>
-          <br/>
+          <br *ngIf="feedItem.data.hasOwnProperty('body')"/>
 
           <span class="subreddit">{{feedItem.data.subreddit}}</span>
           <span *ngIf="feedItem.data.hasOwnProperty('link_flair_text') && feedItem.data.link_flair_text !== null"
@@ -60,9 +60,9 @@
           <span *ngIf="!feedItem.data.hasOwnProperty('num_comments')" class="comments">comments not available</span>
           <span class="gilded" *ngIf="feedItem.data.gilded > 0">&nbsp;x{{feedItem.data.gilded}}</span>
         </ion-col>
-        <ion-col class="thumbnail-column" *ngIf="feedItem.data.hasOwnProperty('thumbnailImage')" width-33
+        <ion-col [ngStyle]="{'background-image': 'url(' + feedItem.data.thumbnailImage + ')'}"
+                 class="thumbnail-column" *ngIf="feedItem.data.hasOwnProperty('thumbnailImage')" width-33
                  (click)="openImage(feedItem)">
-          <img class="thumbnail" src="{{feedItem.data.thumbnailImage}}">
         </ion-col>
       </ion-row>
     </ion-card>

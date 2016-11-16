@@ -49,9 +49,10 @@
           <span class="comments">{{feedItem.data.num_comments}} comments</span>
           <span class="gilded" *ngIf="feedItem.data.gilded > 0">&nbsp;x{{feedItem.data.gilded}}</span>
         </ion-col>
-        <ion-col class="thumbnail-column" *ngIf="feedItem.data.thumbnail !== 'default' && feedItem.data.thumbnail !== 'self'" width-33
+        <ion-col [ngStyle]="{'background-image': 'url(' + feedItem.data.thumbnailImage + ')'}"
+                 class="thumbnail-column"
+                 *ngIf="feedItem.data.thumbnail !== 'default' && feedItem.data.thumbnail !== 'self'" width-33
                  (click)="openImage(feedItem)">
-          <img class="thumbnail" src="{{feedItem.data.thumbnailImage}}">
         </ion-col>
       </ion-row>
     </ion-card>
