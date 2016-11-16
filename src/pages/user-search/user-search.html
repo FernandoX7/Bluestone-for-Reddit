@@ -21,6 +21,8 @@
 
   <ion-list>
 
+    <div class="no-data-dialog" *ngIf="isThereData === false">There doesn't appear to be anything here</div>
+
     <ion-card class="card" *ngFor="let feedItem of feed">
       <ion-row>
         <ion-col padding (click)="goToItemDetail(feedItem)">

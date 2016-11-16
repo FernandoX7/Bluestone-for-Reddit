@@ -19,6 +19,7 @@ export class UserSearch implements OnInit {
   feed: any;
   typeOfPage: string;
   subTypeOfPage: any;
+  isThereData: boolean;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private data: GetUserService, public modalCtrl: ModalController, public popoverCtrl: PopoverController) {
     this.passedUserName = navParams.get('searchValue');
@@ -35,6 +36,13 @@ export class UserSearch implements OnInit {
           data = data.data.children;
           this.feed = data;
           console.log(this.passedUserName, 'data:', data);
+
+          // Check if there is any data at all
+          if (data.length < 1) {
+            this.isThereData = false;
+          } else {
+            this.isThereData = true;
+          }
 
           // Add higher quality thumbnails
           for (var i = 0; i < data.length; i++) {
@@ -84,6 +92,13 @@ export class UserSearch implements OnInit {
           data = data.data.children;
           this.feed = data;
           console.log(this.passedUserName, 'data:', data);
+
+          // Check if there is any data at all
+          if (data.length < 1) {
+            this.isThereData = false;
+          } else {
+            this.isThereData = true;
+          }
 
           // Add higher quality thumbnails
           for (var i = 0; i < data.length; i++) {
