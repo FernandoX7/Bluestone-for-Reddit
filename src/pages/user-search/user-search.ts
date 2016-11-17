@@ -1,5 +1,8 @@
 import {Component, OnInit} from '@angular/core';
-import {NavController, NavParams, ModalController, PopoverController, LoadingController} from 'ionic-angular';
+import {
+  NavController, NavParams, ModalController, PopoverController, LoadingController,
+  ToastController
+} from 'ionic-angular';
 import * as _ from 'lodash';
 import * as moment from 'moment';
 import {GetUserService} from "./get-user-service";
@@ -21,7 +24,7 @@ export class UserSearch implements OnInit {
   subTypeOfPage: any;
   isThereData: boolean;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private data: GetUserService, public modalCtrl: ModalController, public popoverCtrl: PopoverController, public loadingCtrl: LoadingController) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, private data: GetUserService, public modalCtrl: ModalController, public popoverCtrl: PopoverController, public loadingCtrl: LoadingController, public toastCtrl: ToastController) {
     this.passedUserName = navParams.get('searchValue');
   }
 
@@ -100,7 +103,11 @@ export class UserSearch implements OnInit {
 
           console.log('Feed data', data);
         },
-        err => console.error('There was an error getting the searched user', err),
+        err => {
+          console.error('There was an error getting the searched user', err);
+          this.presentToast('Error: ' + err.statusText);
+          loader.dismissAll();
+        },
         () => console.log('Successfully got the searched user')
       );
 
@@ -179,7 +186,11 @@ export class UserSearch implements OnInit {
 
           console.log('Feed data', data);
         },
-        err => console.error('There was an error getting the searched user', err),
+        err => {
+          console.error('There was an error getting the searched user', err);
+          this.presentToast('Error: ' + err.statusText);
+          loader.dismissAll();
+        },
         () => console.log('Successfully got the searched user')
       );
 
@@ -240,6 +251,14 @@ export class UserSearch implements OnInit {
       var yearsAgo = currentTime.diff(createdAt, 'years');
       return yearsAgo + 'y';
     }
+  }
+
+  presentToast(message) {
+    let toast = this.toastCtrl.create({
+      message: message,
+      duration: 3000
+    });
+    toast.present();
   }
 
 }

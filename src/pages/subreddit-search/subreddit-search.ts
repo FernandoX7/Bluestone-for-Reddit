@@ -1,5 +1,8 @@
 import {Component, OnInit} from '@angular/core';
-import {NavController, NavParams, ModalController, LoadingController, PopoverController} from 'ionic-angular';
+import {
+  NavController, NavParams, ModalController, LoadingController, PopoverController,
+  ToastController
+} from 'ionic-angular';
 import {GetSubredditService} from "./get-subreddit-service";
 import * as _ from 'lodash';
 import * as moment from 'moment';
@@ -21,7 +24,7 @@ export class SubredditSearch implements OnInit {
   subTypeOfPage: any;
   isThereData: boolean;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private data: GetSubredditService, public modalCtrl: ModalController, public loadingCtrl: LoadingController, public popoverCtrl: PopoverController) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, private data: GetSubredditService, public modalCtrl: ModalController, public loadingCtrl: LoadingController, public popoverCtrl: PopoverController, public toastCtrl: ToastController) {
     this.passedSubredditName = navParams.get('searchValue');
   }
 
@@ -99,7 +102,15 @@ export class SubredditSearch implements OnInit {
           }
 
         },
-        err => console.error('There was an error getting the searched subreddit', err),
+        err => {
+          console.error('There was an error getting the searched subreddit', err);
+          if (err.statusText === '') {
+            this.presentToast('Error: Failed to retrieve subreddit');
+          } else {
+            this.presentToast('Error: ' + err.statusText);
+          }
+          loader.dismissAll();
+        },
         () => console.log('Successfully got the searched subreddit')
       );
 
@@ -215,7 +226,11 @@ export class SubredditSearch implements OnInit {
           }
 
         },
-        err => console.error('There was an error getting the searched subreddit', err),
+        err => {
+          console.error('There was an error getting the searched subreddit', err);
+          this.presentToast('Error: ' + err.statusText);
+          loader.dismissAll();
+        },
         () => console.log('Successfully got the searched subreddit')
       );
 
@@ -240,6 +255,14 @@ export class SubredditSearch implements OnInit {
 
     });
 
+  }
+
+  presentToast(message) {
+    let toast = this.toastCtrl.create({
+      message: message,
+      duration: 3000
+    });
+    toast.present();
   }
 
 }

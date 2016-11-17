@@ -63,17 +63,23 @@ export class MyApp {
         {
           text: 'User',
           handler: data => {
-            this.nav.push(UserSearch, {
-              searchValue: data.title
-            });
+            data.title = data.title.trim();
+            if (data.title !== '') {
+              this.nav.push(UserSearch, {
+                searchValue: data.title
+              });
+            }
           }
         },
         {
           text: 'Subreddit',
           handler: data => {
-            this.nav.push(SubredditSearch, {
-              searchValue: data.title
-            });
+            data.title = data.title.trim();
+            if (data.title !== '') {
+              this.nav.push(SubredditSearch, {
+                searchValue: data.title
+              });
+            }
           }
         }
       ]
