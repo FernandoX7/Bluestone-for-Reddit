@@ -225,17 +225,23 @@ export class Home implements OnInit {
         {
           text: 'User',
           handler: data => {
-            this.navCtrl.push(UserSearch, {
-              searchValue: data.title
-            });
+            data.title = data.title.trim();
+            if (data.title !== '') {
+              this.navCtrl.push(UserSearch, {
+                searchValue: data.title
+              });
+            }
           }
         },
         {
           text: 'Subreddit',
           handler: data => {
-            this.navCtrl.push(SubredditSearch, {
-              searchValue: data.title
-            });
+            data.title = data.title.trim();
+            if (data.title !== '') {
+              this.navCtrl.push(SubredditSearch, {
+                searchValue: data.title
+              });
+            }
           }
         }
       ]
