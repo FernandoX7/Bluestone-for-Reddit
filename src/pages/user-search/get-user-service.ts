@@ -1,13 +1,13 @@
 /**
  * Created by fernando on 11/15/16.
  */
-import {Injectable} from '@angular/core';
+import {Injectable, OnInit} from '@angular/core';
 import {Http} from '@angular/http';
 import 'rxjs/add/operator/map';
 import {Constants} from "../util/Constants";
 
 @Injectable()
-export class GetUserService {
+export class GetUserService implements OnInit {
 
   http: any;
 
@@ -27,7 +27,7 @@ export class GetUserService {
 
   getUserSorted(user, subTypeOfPage) {
     subTypeOfPage = subTypeOfPage.toLowerCase();
-    var feed = this.constants.GET_USER + user + '/' + subTypeOfPage + this.constants.ENDING;
+    let feed = this.constants.GET_USER + user + '/' + subTypeOfPage + this.constants.ENDING;
     return this.http
       .get(feed)
       .map(res => res.json());
