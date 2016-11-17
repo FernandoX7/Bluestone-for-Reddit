@@ -22,86 +22,48 @@ export class Home implements OnInit {
   feed: any;
   typeOfPage: string;
   subTypeOfPage: any;
+  loader: any;
 
-  constructor(public navCtrl: NavController, private data: FeedService, public modalCtrl: ModalController, private navParams: NavParams, public popoverCtrl: PopoverController, public alertCtrl: AlertController, public loadingCtrl: LoadingController) {
+  constructor(private navCtrl: NavController,
+              private data: FeedService,
+              private modalCtrl: ModalController,
+              private navParams: NavParams,
+              private popoverCtrl: PopoverController,
+              private alertCtrl: AlertController,
+              private loadingCtrl: LoadingController) {
   }
 
   ngOnInit() {
-    let loader = this.loadingCtrl.create({
-      content: "Please wait...",
-      duration: 3000
-    });
-    loader.present();
-    // Determine type of news feed to show
-    this.typeOfPage = this.navParams.get('typeOfPage');
-    this.subTypeOfPage = 'Hot'; // Front page
-    if (this.typeOfPage === undefined) {
-      this.typeOfPage = 'Front page';
-    } else if (this.typeOfPage === null) {
-      this.typeOfPage = 'Front page';
-    }
+    this.showLoadingPopup('Please wait...');
+    this.determineNewsFeedToShow();
+    // Get news feed
     this.data
       .getFeed(this.typeOfPage)
       .subscribe(
         data => {
-          loader.dismissAll();
+          this.loadFeed(data);
           data = data.data.children;
-          this.feed = data;
-
-          // Add higher quality thumbnails
-          for (var i = 0; i < data.length; i++) {
-
-            // Get hours posted ago
-            this.feed[i].data['hoursAgo'] = this.getHoursAgo(this.feed[i].data.created_utc);
-
-            // If there's no .preview property - it's an all text post
-            if (typeof data[i].data.preview !== 'undefined') {
-              // Iterate through the resolutions array to find the highest resolution for that picture
-              var maximumResolution = 10;
-              var selectedItemsResolutions = data[i].data.preview.images[0].resolutions;
-
-              // Check if it's a gif
-              if (typeof data[i].data.preview.images[0].variants.gif !== 'undefined') {
-                var selectedItemsResolutionsGifs = data[i].data.preview.images[0].variants.gif.resolutions;
-                selectedItemsResolutions = selectedItemsResolutionsGifs;
-
-                while (maximumResolution > 0) {
-                  if (typeof selectedItemsResolutions[maximumResolution] === 'undefined') {
-                    maximumResolution--;
-                  } else {
-                    // Make the url actually point to the image and add it as a property to the object
-                    var thumbnailImageUrl = selectedItemsResolutions[maximumResolution].url;
-                    thumbnailImageUrl = _.replace(thumbnailImageUrl, new RegExp('&amp;', 'g'), '&');
-                    data[i].data['gifImage'] = thumbnailImageUrl;
-                    break;
-                  }
-                }
-
-              }
-
-              // Reset variable back to normal images not gifs
-              selectedItemsResolutions = data[i].data.preview.images[0].resolutions;
-
-              while (maximumResolution > 0) {
-                if (typeof selectedItemsResolutions[maximumResolution] === 'undefined') {
-                  maximumResolution--;
-                } else {
-                  // Make the url actually point to the image and add it as a property to the object
-                  var thumbnailImageUrl = selectedItemsResolutions[maximumResolution].url;
-                  thumbnailImageUrl = _.replace(thumbnailImageUrl, new RegExp('&amp;', 'g'), '&');
-                  data[i].data['thumbnailImage'] = thumbnailImageUrl;
-                  break;
-                }
-              }
-            }
-          }
-
-          console.log('Feed data', data);
+          console.log('Homepage news feed data', data);
         },
-        err => console.error('There was an error getting the news feed', err),
-        () => console.log('Successfully got the news feed')
+        err => console.error('There was an error loading the home page news feed', err),
+        () => console.log('Successfully loaded the home page news feed')
       );
+  }
 
+  // Update news feed based on new sub type
+  loadSubType(subType) {
+    this.showLoadingPopup('Please wait...');
+    this.data
+      .getSubTypeFeed(this.typeOfPage, subType)
+      .subscribe(
+        data => {
+          this.loadFeed(data);
+          data = data.data.children;
+          console.log('Homepage news feed data (subType)', data);
+        },
+        err => console.error('There was an error loading the home page news feed (subType)', err),
+        () => console.log('Successfully loaded the home page news feed (subType)')
+      );
   }
 
   goToItemDetail(item) {
@@ -138,77 +100,6 @@ export class Home implements OnInit {
       var yearsAgo = currentTime.diff(createdAt, 'years');
       return yearsAgo + 'y';
     }
-  }
-
-  // Update news feed based on new sub type
-  loadSubType(subType) {
-    let loader = this.loadingCtrl.create({
-      content: "Please wait...",
-      duration: 3000
-    });
-    loader.present();
-    this.data
-      .getSubTypeFeed(this.typeOfPage, subType)
-      .subscribe(
-        data => {
-          loader.dismissAll();
-          data = data.data.children;
-          this.feed = data;
-
-          // Add higher quality thumbnails
-          for (var i = 0; i < data.length; i++) {
-
-            // Get hours posted ago
-            this.feed[i].data['hoursAgo'] = this.getHoursAgo(this.feed[i].data.created_utc);
-
-            // If there's no .preview property - it's an all text post
-            if (typeof data[i].data.preview !== 'undefined') {
-              // Iterate through the resolutions array to find the highest resolution for that picture
-              var maximumResolution = 10;
-              var selectedItemsResolutions = data[i].data.preview.images[0].resolutions;
-
-              // Check if it's a gif
-              if (typeof data[i].data.preview.images[0].variants.gif !== 'undefined') {
-                var selectedItemsResolutionsGifs = data[i].data.preview.images[0].variants.gif.resolutions;
-                selectedItemsResolutions = selectedItemsResolutionsGifs;
-
-                while (maximumResolution > 0) {
-                  if (typeof selectedItemsResolutions[maximumResolution] === 'undefined') {
-                    maximumResolution--;
-                  } else {
-                    // Make the url actually point to the image and add it as a property to the object
-                    var thumbnailImageUrl = selectedItemsResolutions[maximumResolution].url;
-                    thumbnailImageUrl = _.replace(thumbnailImageUrl, new RegExp('&amp;', 'g'), '&');
-                    data[i].data['gifImage'] = thumbnailImageUrl;
-                    break;
-                  }
-                }
-
-              }
-
-              // Reset variable back to normal images not gifs
-              selectedItemsResolutions = data[i].data.preview.images[0].resolutions;
-
-              while (maximumResolution > 0) {
-                if (typeof selectedItemsResolutions[maximumResolution] === 'undefined') {
-                  maximumResolution--;
-                } else {
-                  // Make the url actually point to the image and add it as a property to the object
-                  var thumbnailImageUrl = selectedItemsResolutions[maximumResolution].url;
-                  thumbnailImageUrl = _.replace(thumbnailImageUrl, new RegExp('&amp;', 'g'), '&');
-                  data[i].data['thumbnailImage'] = thumbnailImageUrl;
-                  break;
-                }
-              }
-            }
-          }
-
-          console.log('Feed data', data);
-        },
-        err => console.error('There was an error getting the news feed', err),
-        () => console.log('Successfully got the news feed')
-      );
-
   }
 
   showSearchPrompt() {
@@ -268,6 +159,84 @@ export class Home implements OnInit {
 
     });
 
+  }
+
+  /**
+   * Handles loading the news feed
+   * @param data - JSON data returned from the service
+   */
+  loadFeed(data) {
+    // Feed loaded - dismiss loading popup
+    this.loader.dismissAll();
+
+    data = data.data.children;
+    this.feed = data;
+
+    // Add higher quality thumbnails
+    for (var i = 0; i < data.length; i++) {
+
+      // Get hours posted ago
+      this.feed[i].data['hoursAgo'] = this.getHoursAgo(this.feed[i].data.created_utc);
+
+      // If there's no .preview property - it's an all text post
+      if (typeof data[i].data.preview !== 'undefined') {
+        // Iterate through the resolutions array to find the highest resolution for that picture
+        let maximumResolution = 10;
+        let selectedItemsResolutions = data[i].data.preview.images[0].resolutions;
+
+        // Check if it's a gif
+        if (typeof data[i].data.preview.images[0].variants.gif !== 'undefined') {
+          selectedItemsResolutions = data[i].data.preview.images[0].variants.gif.resolutions;
+
+          while (maximumResolution > 0) {
+            if (typeof selectedItemsResolutions[maximumResolution] === 'undefined') {
+              maximumResolution--;
+            } else {
+              // Make the url actually point to the image and add it as a property to the object
+              let thumbnailImageUrl = selectedItemsResolutions[maximumResolution].url;
+              thumbnailImageUrl = _.replace(thumbnailImageUrl, new RegExp('&amp;', 'g'), '&');
+              data[i].data['gifImage'] = thumbnailImageUrl;
+              break;
+            }
+          }
+
+        }
+
+        // Reset variable back to normal images not gifs
+        selectedItemsResolutions = data[i].data.preview.images[0].resolutions;
+
+        while (maximumResolution > 0) {
+          if (typeof selectedItemsResolutions[maximumResolution] === 'undefined') {
+            maximumResolution--;
+          } else {
+            // Make the url actually point to the image and add it as a property to the object
+            let thumbnailImageUrl = selectedItemsResolutions[maximumResolution].url;
+            thumbnailImageUrl = _.replace(thumbnailImageUrl, new RegExp('&amp;', 'g'), '&');
+            data[i].data['thumbnailImage'] = thumbnailImageUrl;
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  showLoadingPopup(message) {
+    this.loader = this.loadingCtrl.create({
+      content: message,
+      duration: 3000
+    });
+    this.loader.present();
+  }
+
+  determineNewsFeedToShow() {
+    this.typeOfPage = this.navParams.get('typeOfPage');
+    this.subTypeOfPage = 'Hot'; // Front page
+    if (this.typeOfPage === undefined) {
+      this.typeOfPage = 'Front page';
+    } else if (this.typeOfPage === null) {
+      this.typeOfPage = 'Front page';
+    }
   }
 
 }
