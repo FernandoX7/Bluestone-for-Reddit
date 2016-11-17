@@ -1,13 +1,17 @@
 /**
  * Created by fernando on 11/2/16.
  */
-import {Injectable} from '@angular/core';
+import {Injectable, OnInit} from '@angular/core';
 import {Http} from '@angular/http';
 import 'rxjs/add/operator/map';
 import {Constants} from "../util/Constants";
 
+/**
+ * Handles loading the news feed
+ */
+
 @Injectable()
-export class FeedService {
+export class FeedService implements OnInit {
 
   http: any;
 
@@ -16,11 +20,11 @@ export class FeedService {
   }
 
   ngOnInit() {
-    this.getFeed('');
+    this.getFeed(null);
   }
 
   getTypeOfPage(typeOfPage, isGettingSubType) {
-    var type = '';
+    let type = '';
     if (isGettingSubType) {
       switch (typeOfPage) {
         case 'Front page': // or Homepage
@@ -44,16 +48,16 @@ export class FeedService {
   }
 
   getFeed(typeOfPage) {
-   var type = this.getTypeOfPage(typeOfPage, false);
+   let type = this.getTypeOfPage(typeOfPage, false);
     return this.http
       .get(this.constants.URL +  type)
       .map(res => res.json());
   }
 
   getSubTypeFeed(typeOfPage, subTypeOfPage) {
-    var type = this.getTypeOfPage(typeOfPage, true);
+    let type = this.getTypeOfPage(typeOfPage, true);
     subTypeOfPage = subTypeOfPage.toLowerCase();
-    var feed = type + subTypeOfPage + this.constants.ENDING;
+    let feed = type + subTypeOfPage + this.constants.ENDING;
     return this.http
       .get(feed)
       .map(res => res.json());
