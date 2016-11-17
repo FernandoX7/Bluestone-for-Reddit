@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import * as _ from 'lodash';
-import {NavController, NavParams} from 'ionic-angular';
+import {NavParams} from 'ionic-angular';
 import * as moment from 'moment';
 
 @Component({
@@ -12,24 +12,22 @@ export class HomeItemDetail implements OnInit {
 
   selectedItem: any;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  constructor(public navParams: NavParams) {
     // If we navigated to this page, we will have an item available as a nav param
     this.selectedItem = navParams.get('feedItem');
-    console.log('Successfully got: ', this.selectedItem);
+    console.log('Successfully passed news feed item ' + moment().format("M/D/YY - h:mm:ss a"), this.selectedItem);
   }
 
   ngOnInit() {
-
     // If there's no .preview property - it's an all text post
     if (typeof this.selectedItem.data.preview !== 'undefined') {
       // Iterate through the resolutions array to find the highest resolution for that picture
-      var maximumResolution = 10;
-      var selectedItemsResolutions = this.selectedItem.data.preview.images[0].resolutions;
+      let maximumResolution = 10;
+      let selectedItemsResolutions = this.selectedItem.data.preview.images[0].resolutions;
 
       // Check if it's a gif
-      if (typeof this.selectedItem.data.preview.images[0].variants.gif !== 'undefined') {
-        var selectedItemsResolutionsGifs = this.selectedItem.data.preview.images[0].variants.gif.resolutions;
-        selectedItemsResolutions = selectedItemsResolutionsGifs;
+      if (typeof this.selectedItem.data.preview.images[0].variants.gif !== 'undefined') {9
+        selectedItemsResolutions = this.selectedItem.data.preview.images[0].variants.gif.resolutions;
       }
 
       while (maximumResolution > 0) {
@@ -37,7 +35,7 @@ export class HomeItemDetail implements OnInit {
           maximumResolution--;
         } else {
           // Make the url actually point to the image and add it as a property to the object
-          var headerImageUrl = selectedItemsResolutions[maximumResolution].url;
+          let headerImageUrl = selectedItemsResolutions[maximumResolution].url;
           headerImageUrl = _.replace(headerImageUrl, new RegExp('&amp;', 'g'), '&');
           this.selectedItem.data['headerImage'] = headerImageUrl;
           break;
@@ -59,16 +57,16 @@ export class HomeItemDetail implements OnInit {
   }
 
   private getHoursAgo(created_utc: any) {
-    var currentTime = moment();
-    var createdAt = moment.unix(created_utc);
-    var hoursAgo = currentTime.diff(createdAt, 'hours');
+    let currentTime = moment();
+    let createdAt = moment.unix(created_utc);
+    let hoursAgo = currentTime.diff(createdAt, 'hours');
     if (hoursAgo <= 23) {
       return hoursAgo + 'h';
     } else if (hoursAgo >= 24 && hoursAgo <= 8759) {
-      var daysAgo = currentTime.diff(createdAt, 'days');
+      let daysAgo = currentTime.diff(createdAt, 'days');
       return daysAgo + 'd';
     } else if (hoursAgo >= 8760) {
-      var yearsAgo = currentTime.diff(createdAt, 'years');
+      let yearsAgo = currentTime.diff(createdAt, 'years');
       return yearsAgo + 'y';
     }
   }
