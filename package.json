@@ -1,6 +1,6 @@
 {
-  "name": "ionic-hello-world",
-  "author": "Ionic Framework",
+  "name": "Bluestone",
+  "author": "Fernando Ramirez",
   "homepage": "http://ionicframework.com/",
   "private": true,
   "scripts": {
@@ -46,5 +46,5 @@
       "locator": "ios"
     }
   ],
-  "description": "reddit: An Ionic project"
+  "description": "An unofficial reddit client"
 }
