@@ -1,5 +1,5 @@
 <ion-list no-lines>
-  <ion-item class="sort-popover" *ngFor="let category of categories" (click)="selectCategory(category)">
+  <ion-item class="sort-popover" *ngFor="let category of categories" (tap)="selectCategory(category)">
     {{category}}
   </ion-item>
 </ion-list>
