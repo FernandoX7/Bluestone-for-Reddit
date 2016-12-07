@@ -81,8 +81,8 @@ export class SubredditSearch implements OnInit {
       .getSortedSubreddit(this.passedSubredditName, subType)
       .subscribe(
         data => {
-          this.loadFeed(data, false);
           this.nextPageCode = data.data.after;
+          this.loadFeed(data, false);
           data = data.data.children;
 
           // Check if there is any data at all
@@ -256,35 +256,41 @@ export class SubredditSearch implements OnInit {
   loadMoreData(infiniteScroll) {
     console.log('Begin loading more data async', this.subTypeOfPage);
 
-    if (this.subTypeOfPage !== 'Hot') {
-      setTimeout(() => {
-        this.data
-          .getMoreSortedSubreddit(this.passedSubredditName, this.subTypeOfPage, this.nextPageCode)
-          .subscribe(
-            data => {
-              this.loadFeed(data, true);
-              this.nextPageCode = data.data.after;
-            },
-            err => console.error('There was an error loading the home page news feed for subtype ', this.subTypeOfPage, err),
-            () => console.log('Successfully loaded the home page news feed')
-          );
-        infiniteScroll.complete();
-      }, 500);
+    if (this.nextPageCode !== null) {
+      if (this.subTypeOfPage !== 'Hot') {
+        setTimeout(() => {
+          this.data
+            .getMoreSortedSubreddit(this.passedSubredditName, this.subTypeOfPage, this.nextPageCode)
+            .subscribe(
+              data => {
+                this.loadFeed(data, true);
+                this.nextPageCode = data.data.after;
+              },
+              err => console.error('There was an error loading the home page news feed for subtype ', this.subTypeOfPage, err),
+              () => console.log('Successfully loaded the home page news feed')
+            );
+          infiniteScroll.complete();
+        }, 500);
+      } else {
+        setTimeout(() => {
+          this.data
+            .getMoreSubreddit(this.passedSubredditName, this.nextPageCode)
+            .subscribe(
+              data => {
+                this.loadFeed(data, true);
+                this.nextPageCode = data.data.after;
+              },
+              err => console.error('There was an error loading the home page news feed for subtype ', this.subTypeOfPage, err),
+              () => console.log('Successfully loaded the home page news feed')
+            );
+          infiniteScroll.complete();
+        }, 500);
+      }
     } else {
-      setTimeout(() => {
-        this.data
-          .getMoreSubreddit(this.passedSubredditName, this.nextPageCode)
-          .subscribe(
-            data => {
-              this.loadFeed(data, true);
-              this.nextPageCode = data.data.after;
-            },
-            err => console.error('There was an error loading the home page news feed for subtype ', this.subTypeOfPage, err),
-            () => console.log('Successfully loaded the home page news feed')
-          );
-        infiniteScroll.complete();
-      }, 500);
+      infiniteScroll.complete();
     }
+
+
 
 
   }
