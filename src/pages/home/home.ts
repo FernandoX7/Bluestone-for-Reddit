@@ -1,9 +1,9 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import * as _ from 'lodash';
 import * as moment from 'moment';
 import {
   NavController, ModalController, NavParams, PopoverController, AlertController,
-  LoadingController
+  LoadingController, Content
 } from 'ionic-angular';
 import {FeedService} from "./feed-service";
 import {HomeItemDetail} from "../home-item-detail/home-item-detail";
@@ -19,10 +19,13 @@ import {UserSearch} from "../user-search/user-search";
 })
 export class Home implements OnInit {
 
+  @ViewChild(Content) content: Content;
+
   feed: any;
   typeOfPage: string;
   subTypeOfPage: any;
   loader: any;
+  nextPageCode: string;
 
   constructor(private navCtrl: NavController,
               private data: FeedService,
@@ -41,9 +44,9 @@ export class Home implements OnInit {
       .getFeed(this.typeOfPage)
       .subscribe(
         data => {
-          this.loadFeed(data);
+          this.loadFeed(data, false);
+          this.nextPageCode = data.data.after;
           data = data.data.children;
-          console.log('Homepage news feed data', data);
         },
         err => console.error('There was an error loading the home page news feed', err),
         () => console.log('Successfully loaded the home page news feed')
@@ -53,13 +56,14 @@ export class Home implements OnInit {
   // Update news feed based on new sub type
   loadSubType(subType) {
     this.showLoadingPopup('Please wait...');
+    this.content.scrollToTop();
     this.data
       .getSubTypeFeed(this.typeOfPage, subType)
       .subscribe(
         data => {
-          this.loadFeed(data);
+          this.nextPageCode = data.data.after;
+          this.loadFeed(data, false);
           data = data.data.children;
-          console.log('Homepage news feed data (subType)', data);
         },
         err => console.error('There was an error loading the home page news feed (subType)', err),
         () => console.log('Successfully loaded the home page news feed (subType)')
@@ -164,16 +168,24 @@ export class Home implements OnInit {
   /**
    * Handles loading the news feed
    * @param data - JSON data returned from the service
+   * @param isLoadingMoreData - Used for when scrolling down and loading data
    */
-  loadFeed(data) {
+  loadFeed(data, isLoadingMoreData: boolean) {
     // Feed loaded - dismiss loading popup
     this.loader.dismissAll();
 
     data = data.data.children;
-    this.feed = data;
+    if(!isLoadingMoreData) {
+      this.feed = data;
+    }
 
     // Add higher quality thumbnails
     for (var i = 0; i < data.length; i++) {
+
+      // Add the next page of data to the feed
+      if(isLoadingMoreData) {
+        this.feed.push(data[i]);
+      }
 
       // Get hours posted ago
       this.feed[i].data['hoursAgo'] = this.getHoursAgo(this.feed[i].data.created_utc);
@@ -237,6 +249,41 @@ export class Home implements OnInit {
     } else if (this.typeOfPage === null) {
       this.typeOfPage = 'Front page';
     }
+  }
+
+  loadMoreData(infiniteScroll) {
+    console.log('Begin loading more data async', this.subTypeOfPage);
+
+    if (this.subTypeOfPage !== 'Hot') {
+      setTimeout(() => {
+        this.data
+          .getMoreSubTypeFeed(this.typeOfPage, this.subTypeOfPage, this.nextPageCode)
+          .subscribe(
+            data => {
+              this.loadFeed(data, true);
+              this.nextPageCode = data.data.after;
+            },
+            err => console.error('There was an error loading the home page news feed for subtype ', this.subTypeOfPage, err),
+            () => console.log('Successfully loaded the home page news feed')
+          );
+        infiniteScroll.complete();
+      }, 500);
+    } else {
+      setTimeout(() => {
+        this.data
+          .getMoreFeed(this.typeOfPage, this.nextPageCode)
+          .subscribe(
+            data => {
+              this.loadFeed(data, true);
+              this.nextPageCode = data.data.after;
+            },
+            err => console.error('There was an error loading the home page news feed for subtype ', this.subTypeOfPage, err),
+            () => console.log('Successfully loaded the home page news feed')
+          );
+        infiniteScroll.complete();
+      }, 500);
+    }
+
   }
 
 }
