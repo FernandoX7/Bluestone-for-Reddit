@@ -1,7 +1,7 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {
   NavController, NavParams, ModalController, LoadingController, PopoverController,
-  ToastController
+  ToastController, Content
 } from 'ionic-angular';
 import {GetSubredditService} from "./get-subreddit-service";
 import * as _ from 'lodash';
@@ -18,12 +18,15 @@ import {SortSearchedSubredditPopover} from "./sort-searched-subreddit-popover";
 
 export class SubredditSearch implements OnInit {
 
+  @ViewChild(Content) content: Content;
+
   passedSubredditName: string;
   feed: any;
   typeOfPage: string;
   subTypeOfPage: any;
   isThereData: boolean;
   loader: any;
+  nextPageCode: string;
 
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
@@ -44,9 +47,9 @@ export class SubredditSearch implements OnInit {
       .getSubreddit(this.passedSubredditName)
       .subscribe(
         data => {
-          this.loadFeed(data);
+          this.loadFeed(data, false);
+          this.nextPageCode = data.data.after;
           data = data.data.children;
-          console.log('r/' + this.passedSubredditName, 'news feed data', data);
 
           // Check if there is any data at all
           if (data.length < 1) {
@@ -65,7 +68,7 @@ export class SubredditSearch implements OnInit {
           }
           this.loader.dismissAll();
         },
-        () => console.log('Successfully retrieved ' + 'r/' + this.passedSubredditName)
+        () => console.log('Successfully retrieved ' + 'r/' + this.passedSubredditName, ' and ', this.nextPageCode)
       );
 
   }
@@ -73,13 +76,14 @@ export class SubredditSearch implements OnInit {
   // Update news feed based on new sub type
   loadSubType(subType) {
     this.showLoadingPopup('Please wait...');
+    this.content.scrollToTop();
     this.data
       .getSortedSubreddit(this.passedSubredditName, subType)
       .subscribe(
         data => {
-          this.loadFeed(data);
+          this.loadFeed(data, false);
+          this.nextPageCode = data.data.after;
           data = data.data.children;
-          console.log('r/' + this.passedSubredditName, 'news feed data (subType)', data);
 
           // Check if there is any data at all
           if (data.length < 1) {
@@ -98,7 +102,7 @@ export class SubredditSearch implements OnInit {
           }
           this.loader.dismissAll();
         },
-        () => console.log('Successfully retrieved ' + 'r/' + this.passedSubredditName)
+        () => console.log('Successfully retrieved ' + 'r/' + this.passedSubredditName, ' and ', this.nextPageCode)
       );
 
   }
@@ -113,12 +117,10 @@ export class SubredditSearch implements OnInit {
     let thumbnailPopup: any;
     // Check if its a gif
     if (feedItem.data.hasOwnProperty('gifImage')) {
-      console.log('first');
       thumbnailPopup = this.modalCtrl.create(ThumbnailImage, {
         image: feedItem.data.gifImage
       });
     } else {
-      console.log('second');
       thumbnailPopup = this.modalCtrl.create(ThumbnailImage, {
         image: feedItem.data.thumbnailImage
       });
@@ -186,16 +188,24 @@ export class SubredditSearch implements OnInit {
   /**
    * Handles loading the news feed
    * @param data - JSON data returned from the service
+   * @param isLoadingMoreData - Used for when scrolling down and loading data
    */
-  loadFeed(data) {
+  loadFeed(data, isLoadingMoreData: boolean) {
     // Feed loaded - dismiss loading popup
     this.loader.dismissAll();
 
     data = data.data.children;
-    this.feed = data;
+    if(!isLoadingMoreData) {
+      this.feed = data;
+    }
 
     // Add higher quality thumbnails
     for (var i = 0; i < data.length; i++) {
+
+      // Add the next page of data to the feed
+      if(isLoadingMoreData) {
+        this.feed.push(data[i]);
+      }
 
       // Get hours posted ago
       this.feed[i].data['hoursAgo'] = this.getHoursAgo(this.feed[i].data.created_utc);
@@ -240,6 +250,42 @@ export class SubredditSearch implements OnInit {
         }
       }
     }
+
+  }
+
+  loadMoreData(infiniteScroll) {
+    console.log('Begin loading more data async', this.subTypeOfPage);
+
+    if (this.subTypeOfPage !== 'Hot') {
+      setTimeout(() => {
+        this.data
+          .getMoreSortedSubreddit(this.passedSubredditName, this.subTypeOfPage, this.nextPageCode)
+          .subscribe(
+            data => {
+              this.loadFeed(data, true);
+              this.nextPageCode = data.data.after;
+            },
+            err => console.error('There was an error loading the home page news feed for subtype ', this.subTypeOfPage, err),
+            () => console.log('Successfully loaded the home page news feed')
+          );
+        infiniteScroll.complete();
+      }, 500);
+    } else {
+      setTimeout(() => {
+        this.data
+          .getMoreSubreddit(this.passedSubredditName, this.nextPageCode)
+          .subscribe(
+            data => {
+              this.loadFeed(data, true);
+              this.nextPageCode = data.data.after;
+            },
+            err => console.error('There was an error loading the home page news feed for subtype ', this.subTypeOfPage, err),
+            () => console.log('Successfully loaded the home page news feed')
+          );
+        infiniteScroll.complete();
+      }, 500);
+    }
+
 
   }
 

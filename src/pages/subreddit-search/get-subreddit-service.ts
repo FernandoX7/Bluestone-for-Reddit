@@ -25,9 +25,25 @@ export class GetSubredditService implements OnInit{
       .map(res => res.json());
   }
 
+  // Load more feed while scrolling
+  getMoreSubreddit(subreddit, afterPageCode) {
+    return this.http
+      .get(this.constants.GET_SUBREDDIT + subreddit + this.constants.ENDING + '?after=' + afterPageCode)
+      .map(res => res.json());
+  }
+
   getSortedSubreddit(subreddit, subTypeOfPage) {
     subTypeOfPage = subTypeOfPage.toLowerCase();
     let feed = this.constants.GET_SUBREDDIT + subreddit + this.constants.AND + subTypeOfPage + this.constants.ENDING;
+    return this.http
+      .get(feed)
+      .map(res => res.json());
+  }
+
+  // Load more feed while scrolling
+  getMoreSortedSubreddit(subreddit, subTypeOfPage, afterPageCode) {
+    subTypeOfPage = subTypeOfPage.toLowerCase();
+    let feed = this.constants.GET_SUBREDDIT + subreddit + this.constants.AND + subTypeOfPage + this.constants.ENDING + '?after=' + afterPageCode;
     return this.http
       .get(feed)
       .map(res => res.json());
