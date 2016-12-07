@@ -54,10 +54,28 @@ export class FeedService implements OnInit {
       .map(res => res.json());
   }
 
+  // Load more feed while scrolling
+  getMoreFeed(typeOfPage, afterPageCode) {
+    let type = this.getTypeOfPage(typeOfPage, false);
+    return this.http
+      .get(this.constants.URL +  type + '?after=' + afterPageCode)
+      .map(res => res.json());
+  }
+
   getSubTypeFeed(typeOfPage, subTypeOfPage) {
     let type = this.getTypeOfPage(typeOfPage, true);
     subTypeOfPage = subTypeOfPage.toLowerCase();
     let feed = type + subTypeOfPage + this.constants.ENDING;
+    return this.http
+      .get(feed)
+      .map(res => res.json());
+  }
+
+  // Load more feed while scrolling
+  getMoreSubTypeFeed(typeOfPage, subTypeOfPage, afterPageCode) {
+    let type = this.getTypeOfPage(typeOfPage, true);
+    subTypeOfPage = subTypeOfPage.toLowerCase();
+    let feed = type + subTypeOfPage + this.constants.ENDING + '?after=' + afterPageCode;
     return this.http
       .get(feed)
       .map(res => res.json());
