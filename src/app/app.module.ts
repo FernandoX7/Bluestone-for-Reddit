@@ -12,6 +12,8 @@ import {SortFeedPopover} from "../pages/home/sort-feed-popover";
 import {UserSearch} from "../pages/user-search/user-search";
 import {SortUserFeedPopover} from "../pages/user-search/sort-user-feed-popover";
 import {SortSearchedSubredditPopover} from "../pages/subreddit-search/sort-searched-subreddit-popover";
+import {CommentsList} from "../pages/comments/comments-list/comments-list";
+import {MomentModule} from "angular2-moment";
 
 @NgModule({
   declarations: [
@@ -23,10 +25,12 @@ import {SortSearchedSubredditPopover} from "../pages/subreddit-search/sort-searc
     SortFeedPopover,
     UserSearch,
     SortUserFeedPopover,
-    SortSearchedSubredditPopover
+    SortSearchedSubredditPopover,
+    CommentsList
   ],
   imports: [
-    IonicModule.forRoot(MyApp, { mode: 'md' })
+    IonicModule.forRoot(MyApp, { mode: 'md' }),
+    MomentModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [

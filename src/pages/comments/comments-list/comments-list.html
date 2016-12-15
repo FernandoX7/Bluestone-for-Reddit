@@ -1,0 +1,21 @@
+<ion-list no-lines class="comments-list">
+  <ion-item *ngFor="let comment of comments; trackBy: trackByCommentId">
+    <p>
+      <span class="comment-author">{{comment.author}}</span>
+      <span class="comment-score">&nbsp;{{comment.score}}</span>
+      <span class="comment-time-ago">{{(comment.created_utc | amFromUnix) | amTimeAgo:true}} &sdot;</span>
+    </p>
+    <p class="comment-body">{{comment.body}}</p>
+    <button
+      *ngIf="comment.replies.length"
+      (click)="toggleExpanded(comment)"
+      ion-button clear
+      class="replies-toggle">
+      <span class="comment-amount">{{comment.replies.length}}</span>
+      <ion-icon name="ios-arrow-down" *ngIf="comment.expanded"></ion-icon>
+      <ion-icon name="ios-arrow-forward" *ngIf="!comment.expanded"></ion-icon>
+    </button>
+    <comments-list *ngIf="comment.replies.length && comment.expanded" [comments]="comment.replies"></comments-list>
+    <div class="line-seperator"></div>
+  </ion-item>
+</ion-list>

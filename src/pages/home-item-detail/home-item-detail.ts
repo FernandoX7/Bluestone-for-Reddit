@@ -2,20 +2,33 @@ import {Component, OnInit} from '@angular/core';
 import * as _ from 'lodash';
 import {NavParams} from 'ionic-angular';
 import * as moment from 'moment';
+import {CommentsService} from "../comments/comments-service";
 
 @Component({
   selector: 'page-home-item-detail',
-  templateUrl: 'home-item-detail.html'
+  templateUrl: 'home-item-detail.html',
+  providers: [CommentsService]
 })
 
 export class HomeItemDetail implements OnInit {
 
   selectedItem: any;
+  post: any;
+  comments: any;
 
-  constructor(public navParams: NavParams) {
+  constructor(public navParams: NavParams, public commentsService: CommentsService) {
     // If we navigated to this page, we will have an item available as a nav param
     this.selectedItem = navParams.get('feedItem');
     console.log('Successfully passed news feed item ' + moment().format("M/D/YY - h:mm:ss a"), this.selectedItem);
+    this.post = this.selectedItem.data;
+    this.retrieveComments();
+  }
+
+  retrieveComments() {
+    this.commentsService.fetchComments(this.post).subscribe((comments) => {
+      this.comments = comments;
+      // TODO: Add loading and stop it here
+    })
   }
 
   ngOnInit() {
