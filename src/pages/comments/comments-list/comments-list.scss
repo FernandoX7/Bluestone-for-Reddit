@@ -1,0 +1,73 @@
+.comments-list {
+
+  ion-item {
+    margin-top: 5px;
+    background-color: #1b2836;
+    border-left: 1px solid #a0a2a7 !important;
+    padding-left: 10px;
+
+    > .item-inner {
+      padding-right: 0 !important;
+    }
+
+    * {
+      white-space: normal;
+    }
+
+    .comment-author {
+      font-size: 1.65rem;
+      color: #ff5252;
+    }
+
+    .comment-score {
+      font-size: 1.3rem;
+      color: #a0a2a7;
+      margin-right: 5px;
+      float: right;
+    }
+
+    .comment-time-ago {
+      font-size: 1.3rem;
+      color: #a0a2a7;
+      float: right;
+    }
+
+    .comment-amount {
+      background-color: #42a5f5;
+      color: white;
+      float: right;
+      margin-right: 5px;
+    }
+
+    .comment-body {
+      margin-top: 10px;
+      color: #ededed;
+    }
+
+    ion-label {
+      margin-bottom: 5px;
+      margin-top: 5px;
+    }
+  }
+
+  .replies-toggle {
+    background-color: #42a5f5;
+    margin-top: 10px;
+    color: #ededed;
+    position: relative;
+    left: -6px;
+
+    ion-icon {
+      position: relative;
+      margin-left: 5px;
+    }
+  }
+
+  .line-seperator {
+    margin-top: 12px;
+    height: 1px;
+    border-bottom: 1px solid #263441;
+  }
+
+}
+
