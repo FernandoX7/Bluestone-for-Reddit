@@ -15,6 +15,7 @@ export class HomeItemDetail implements OnInit {
   selectedItem: any;
   post: any;
   comments: any;
+  loadCompleted: boolean = false;
 
   constructor(public navParams: NavParams, public commentsService: CommentsService) {
     // If we navigated to this page, we will have an item available as a nav param
@@ -26,8 +27,8 @@ export class HomeItemDetail implements OnInit {
 
   retrieveComments() {
     this.commentsService.fetchComments(this.post).subscribe((comments) => {
+      this.loadCompleted = true;
       this.comments = comments;
-      // TODO: Add loading and stop it here
     })
   }
 

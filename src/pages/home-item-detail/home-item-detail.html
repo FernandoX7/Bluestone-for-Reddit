@@ -63,6 +63,7 @@
   <!--</ion-row>-->
 
   <div class="seperator"></div>
+  <div class="loading-bar" *ngIf="!loadCompleted"></div>
 
   <comments-list [comments]="comments"></comments-list>
 
