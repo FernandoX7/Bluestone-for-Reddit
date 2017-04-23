@@ -4,7 +4,7 @@
 import {Injectable, OnInit} from '@angular/core';
 import {Http} from '@angular/http';
 import 'rxjs/add/operator/map';
-import {Constants} from "../util/Constants";
+import {Constants} from "../../util/Constants";
 
 @Injectable()
 export class GetUserService implements OnInit {
