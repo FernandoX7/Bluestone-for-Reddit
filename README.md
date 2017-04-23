@@ -4,11 +4,11 @@ Bluestone for Reddit
 # Setup
 
 Clone and run `npm install`
+Run `ionic serve`
 
 # NOTE
 
-Even if this is a hybrid mobile app, it was made with iOS in mind due to the low amount of good quality reddit apps
-
+This is an app meant towards iOS users even if it is a hybrid ionic app.
 
 # LICENSE
 
