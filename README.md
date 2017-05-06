@@ -1,14 +1,35 @@
-Bluestone for Reddit
-=====================
+# Bluestone for Reddit
+Ionic Hybrid Mobile app 
 
-# Setup
+About
+-----
+![demo](https://media.giphy.com/media/xUA7bguaauDzg1LBLO/giphy.gif)
+![demo](https://media.giphy.com/media/l4FGjOzcCrE40JRiU/giphy.gif)
+
+Bluestone is a "Reddit Reader" written in Ionic 3
+
+Features include
++ Dark Theme
++ User and Subreddit searching
++ Filtering searches by "Hot", "New", "Rising", "Controversial", and "Top"
++ Comment browsing and expanding
+
+How to Build
+------------
 
 Clone and run `npm install`
 Run `ionic serve`
 
-# NOTE
+Note: 
++ App is made in Ionic but is targeted towards iOS users due to the low quality of Reddit apps.
 
-This is an app meant towards iOS users even if it is a hybrid ionic app.
+Help
+----
++ Star and Fork
++ Post any issues you find
++ Post new feature requests
+
++ Enjoy the app? Buy me a ☕️ [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=4MSQJHRU7U6AS&lc=US&item_name=SpStreamer&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted)
 
 # LICENSE
 
