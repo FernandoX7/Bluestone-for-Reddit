@@ -29,11 +29,11 @@ Help
 + Post any issues you find
 + Post new feature requests
 
-+ Enjoy the app? Buy me a ☕️ [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=4MSQJHRU7U6AS&lc=US&item_name=SpStreamer&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted)
++ Enjoy the app? Buy me a ☕️ [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=4MSQJHRU7U6AS&lc=US&item_name=Bluestone%20for%20Reddit&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHosted)
 
 # LICENSE
 
-Copyright 2016 Fernando Ramirez
+Copyright 2017 Fernando Ramirez
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
