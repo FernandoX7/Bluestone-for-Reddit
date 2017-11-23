@@ -18,6 +18,18 @@ page-user-search {
 
   .user-info-panel {
     background-color: #25384b;
+
+    .number-data {
+      color: #c1c2c5;
+      font-weight: 600;
+      font-size: 2rem;
+    }
+
+    .category-titles {
+      color: #a0a2a7;
+      font-size: 1.3rem;
+      font-weight: 500;
+    }
   }
 
 }

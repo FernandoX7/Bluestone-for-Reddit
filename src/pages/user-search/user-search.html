@@ -27,11 +27,22 @@
 
 <ion-content class="background">
 
-  <div class="user-info-panel">
-    <div>Comment Karma {{user.commentKarma}}</div>
-    <div>Post Karma {{user.postKarma}}</div>
-    <div>Account Age {{user.createdUTC}}</div>
-  </div>
+  <ion-grid text-center class="user-info-panel">
+    <ion-row>
+      <ion-col width-20>
+        <div class="number-data">{{formatToThousand(user.commentKarma)}}</div>
+        <span class="category-titles">Comment Karma</span>
+      </ion-col>
+      <ion-col width-20 offset-20>
+        <div class="number-data">{{formatToThousand(user.postKarma)}}</div>
+        <span class="category-titles">Post Karma</span>
+      </ion-col>
+      <ion-col width-20 offset-20>
+        <div class="number-data">{{getHoursAgo(user.createdUTC)}}</div>
+        <span class="category-titles">Account Age</span>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 
   <ion-list>
     <!--TODO: Throw error message if no user found-->
