@@ -35,11 +35,12 @@ export class RedditService implements OnInit {
         });
 
         if (fetchMoreAmount > 0) {
+          let newPosts = [];
           submissions.fetchMore({amount: fetchMoreAmount, append: false}).then(extendedPosts => {
             _.forEach(extendedPosts, (extendedPost) => {
-              posts.push(extendedPost);
+              newPosts.push(extendedPost);
             });
-            resolve(posts);
+            resolve(newPosts.slice(-25));
           });
         } else {
           resolve(posts);

@@ -26,6 +26,7 @@ export class Home implements OnInit {
   typeOfPage: string;
   subTypeOfPage: any;
   loader: any;
+  amountOfMoreData = 0;
 
   constructor(private navCtrl: NavController,
               private data: FeedService,
@@ -173,7 +174,13 @@ export class Home implements OnInit {
    */
   loadFeed(posts, isLoadingMoreData: boolean) {
     this.loader.dismissAll();
-    this.posts = posts;
+
+    if (isLoadingMoreData) {
+      this.posts = this.posts.concat(posts);
+    } else {
+      this.posts = posts;
+    }
+
     this.addHigherQualityThumbnails();
   }
 
@@ -251,38 +258,23 @@ export class Home implements OnInit {
   }
 
   loadMoreData(infiniteScroll) {
-    // console.log('Begin loading more data async', this.subTypeOfPage);
-    //
-    // if (this.subTypeOfPage !== 'Hot') {
-    //   setTimeout(() => {
-    //     this.data
-    //       .getMoreSubTypeFeed(this.typeOfPage, this.subTypeOfPage, this.nextPageCode)
-    //       .subscribe(
-    //         data => {
-    //           this.loadFeed(data, true);
-    //           this.nextPageCode = data.data.after;
-    //         },
-    //         err => console.error('There was an error loading the home page news feed for subtype ', this.subTypeOfPage, err),
-    //         () => console.log('Successfully loaded the home page news feed')
-    //       );
-    //     infiniteScroll.complete();
-    //   }, 500);
-    // } else {
-    //   setTimeout(() => {
-    //     this.data
-    //       .getMoreFeed(this.typeOfPage, this.nextPageCode)
-    //       .subscribe(
-    //         data => {
-    //           this.loadFeed(data, true);
-    //           this.nextPageCode = data.data.after;
-    //         },
-    //         err => console.error('There was an error loading the home page news feed for subtype ', this.subTypeOfPage, err),
-    //         () => console.log('Successfully loaded the home page news feed')
-    //       );
-    //     infiniteScroll.complete();
-    //   }, 500);
-    // }
+    this.amountOfMoreData = this.amountOfMoreData + 25;
 
+    if (this.subTypeOfPage === 'Hot') {
+      setTimeout(() => {
+        this.reddit.getHotPosts(undefined, this.amountOfMoreData).then((posts) => {
+          this.loadFeed(posts, true);
+          infiniteScroll.complete();
+        }).catch(err => {
+          console.log('Error getting more hot posts', err);
+          this.reddit.getHotPosts().then(posts => {
+            this.posts = posts
+          });
+        });
+      }, 500);
+    } else {
+      // TODO: Handle other sub types of page
+    }
   }
 
   truncateTitle(post) {
