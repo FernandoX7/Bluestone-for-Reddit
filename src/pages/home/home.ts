@@ -78,16 +78,16 @@ export class Home implements OnInit {
     });
   }
 
-  openImage(feedItem) {
+  openImage(post) {
     let thumbnailPopup: any;
     // Check if its a gif
-    if (feedItem.data.hasOwnProperty('gifImage')) {
+    if (post.hasOwnProperty('gifImage')) {
       thumbnailPopup = this.modalCtrl.create(ThumbnailImage, {
-        image: feedItem.data.gifImage
+        image: post.gifImage
       });
     } else {
       thumbnailPopup = this.modalCtrl.create(ThumbnailImage, {
-        image: feedItem.data.thumbnailImage
+        image: post.thumbnailImage
       });
     }
     thumbnailPopup.present();

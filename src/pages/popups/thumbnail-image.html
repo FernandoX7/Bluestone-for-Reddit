@@ -1,8 +1,3 @@
-<ion-content class="background">
-
-  <div (tap)="closePopup()" class="background-div">
-  </div>
-
-  <img class="image" src="{{data}}">
-
+<ion-content class="background" (tap)="closePopup()">
+  <img class="image" [src]="data" zoom-pan>
 </ion-content>
