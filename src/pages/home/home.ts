@@ -381,7 +381,7 @@ export class Home implements OnInit {
     switch (this.subTypeOfPage) {
       case 'Hot':
         setTimeout(() => {
-         this.getMoreHotPosts(infiniteScroll);
+          this.getMoreHotPosts(infiniteScroll);
         }, 500);
         break;
       case 'New':
@@ -390,13 +390,19 @@ export class Home implements OnInit {
         }, 500);
         break;
       case 'Rising':
-        this.getMoreRisingPosts(infiniteScroll);
+        setTimeout(() => {
+          this.getMoreRisingPosts(infiniteScroll);
+        }, 500);
         break;
       case 'Controversial':
-        this.getMoreControversialPosts(infiniteScroll);
+        setTimeout(() => {
+          this.getMoreControversialPosts(infiniteScroll);
+        }, 500);
         break;
       case 'Top':
-        this.getMoreTopPosts(infiniteScroll);
+        setTimeout(() => {
+          this.getMoreTopPosts(infiniteScroll);
+        }, 500);
         break;
     }
   }
