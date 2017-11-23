@@ -4,7 +4,6 @@ import {StatusBar} from '@ionic-native/status-bar';
 import {SplashScreen} from '@ionic-native/splash-screen';
 
 import {Home} from '../pages/home/home';
-import {SubredditSearch} from "../pages/subreddit-search/subreddit-search";
 import {UserSearch} from "../pages/user-search/user-search";
 
 @Component({
@@ -72,9 +71,9 @@ export class MyApp {
           handler: data => {
             data.title = data.title.trim();
             if (data.title !== '') {
-              this.nav.push(SubredditSearch, {
-                searchValue: data.title
-              });
+              // this.nav.push(SubredditSearch, {
+              //   searchValue: data.title
+              // });
             }
           }
         }

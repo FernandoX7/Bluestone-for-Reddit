@@ -8,7 +8,6 @@ import {
 import {HomeItemDetail} from "../home-item-detail/home-item-detail";
 import {ThumbnailImage} from "../popups/thumbnail-image";
 import {SortFeedPopover} from "./sort-feed-popover";
-import {SubredditSearch} from "../subreddit-search/subreddit-search";
 import {UserSearch} from "../user-search/user-search";
 import {RedditService} from "../../services/reddit-service";
 
