@@ -23,7 +23,7 @@ export class Home implements OnInit {
   @ViewChild(Content) content: Content;
 
   posts: any;
-  typeOfPage: string;
+  typeOfPage: string; // Front or All
   subTypeOfPage: any;
   loader: any;
   amountOfMoreData = 0;
@@ -41,10 +41,10 @@ export class Home implements OnInit {
   ngOnInit() {
     this.showLoadingPopup('Please wait...');
     this.determineNewsFeedToShow();
-    this.getFeed();
+    this.getHotPosts();
   }
 
-  getFeed() {
+  getHotPosts() {
     this.reddit.getHotPosts().then((posts) => {
       this.loadFeed(posts, false);
     }).catch(err => {
@@ -55,21 +55,132 @@ export class Home implements OnInit {
     });
   }
 
+  getMoreHotPosts(infiniteScroll) {
+    this.reddit.getHotPosts(undefined, this.amountOfMoreData).then((posts) => {
+      this.loadFeed(posts, true);
+      infiniteScroll.complete();
+    }).catch(err => {
+      console.log('Error getting more hot posts', err);
+      this.reddit.getHotPosts().then(posts => {
+        this.posts = posts
+      });
+    });
+  }
+
+  getNewPosts() {
+    this.reddit.getNewPosts().then((posts) => {
+      this.loadFeed(posts, false);
+    }).catch(err => {
+      console.log('Error getting new posts', err);
+      this.reddit.getNewPosts().then(posts => {
+        this.posts = posts
+      });
+    });
+  }
+
+  getMoreNewPosts(infiniteScroll) {
+    this.reddit.getNewPosts(undefined, this.amountOfMoreData).then((posts) => {
+      this.loadFeed(posts, true);
+      infiniteScroll.complete();
+    }).catch(err => {
+      console.log('Error getting more new posts', err);
+      this.reddit.getNewPosts().then(posts => {
+        this.posts = posts
+      });
+    });
+  }
+
+  getRisingPosts() {
+    this.reddit.getRisingPosts().then((posts) => {
+      this.loadFeed(posts, false);
+    }).catch(err => {
+      console.log('Error getting rising posts', err);
+      this.reddit.getRisingPosts().then(posts => {
+        this.posts = posts
+      });
+    });
+  }
+
+  getMoreRisingPosts(infiniteScroll) {
+    this.reddit.getRisingPosts(undefined, this.amountOfMoreData).then((posts) => {
+      this.loadFeed(posts, true);
+      infiniteScroll.complete();
+    }).catch(err => {
+      console.log('Error getting more rising posts', err);
+      this.reddit.getRisingPosts().then(posts => {
+        this.posts = posts
+      });
+    });
+  }
+
+  getControversialPosts() {
+    this.reddit.getControversialPosts().then((posts) => {
+      this.loadFeed(posts, false);
+    }).catch(err => {
+      console.log('Error getting controversial posts', err);
+      this.reddit.getControversialPosts().then(posts => {
+        this.posts = posts
+      });
+    });
+  }
+
+  getMoreControversialPosts(infiniteScroll) {
+    this.reddit.getControversialPosts(undefined, this.amountOfMoreData).then((posts) => {
+      this.loadFeed(posts, true);
+      infiniteScroll.complete();
+    }).catch(err => {
+      console.log('Error getting more controversial posts', err);
+      this.reddit.getControversialPosts().then(posts => {
+        this.posts = posts
+      });
+    });
+  }
+
+  getTopPosts() {
+    this.reddit.getTopPosts().then((posts) => {
+      this.loadFeed(posts, false);
+    }).catch(err => {
+      console.log('Error getting top posts', err);
+      this.reddit.getTopPosts().then(posts => {
+        this.posts = posts
+      });
+    });
+  }
+
+  getMoreTopPosts(infiniteScroll) {
+    this.reddit.getTopPosts(undefined, this.amountOfMoreData).then((posts) => {
+      this.loadFeed(posts, true);
+      infiniteScroll.complete();
+    }).catch(err => {
+      console.log('Error getting more top posts', err);
+      this.reddit.getTopPosts().then(posts => {
+        this.posts = posts
+      });
+    });
+  }
+
   // Update news feed based on new sub type
   loadSubType(subType) {
     this.showLoadingPopup('Please wait...');
     this.content.scrollToTop();
-    this.data
-      .getSubTypeFeed(this.typeOfPage, subType)
-      .subscribe(
-        data => {
-          // this.nextPageCode = data.data.after;
-          this.loadFeed(data, false);
-          data = data.data.children;
-        },
-        err => console.error('There was an error loading the home page news feed (subType)', err),
-        () => console.log('Successfully loaded the home page news feed (subType)')
-      );
+
+    switch (subType) {
+      case 'Hot':
+        this.getHotPosts();
+        break;
+      case 'New':
+        this.getNewPosts();
+        break;
+      case 'Rising':
+        this.getRisingPosts();
+        break;
+      case 'Controversial':
+        this.getControversialPosts();
+        break;
+      case 'Top':
+        this.getTopPosts();
+        break;
+    }
   }
 
   goToItemDetail(post) {
@@ -157,14 +268,12 @@ export class Home implements OnInit {
     });
 
     popover.onDidDismiss(data => {
-
       if (data) {
         this.subTypeOfPage = data.newSubTypeOfPage;
         this.loadSubType(data.newSubTypeOfPage);
       }
 
     });
-
   }
 
   /**
@@ -263,20 +372,26 @@ export class Home implements OnInit {
   loadMoreData(infiniteScroll) {
     this.amountOfMoreData = this.amountOfMoreData + 25;
 
-    if (this.subTypeOfPage === 'Hot') {
-      setTimeout(() => {
-        this.reddit.getHotPosts(undefined, this.amountOfMoreData).then((posts) => {
-          this.loadFeed(posts, true);
-          infiniteScroll.complete();
-        }).catch(err => {
-          console.log('Error getting more hot posts', err);
-          this.reddit.getHotPosts().then(posts => {
-            this.posts = posts
-          });
-        });
-      }, 500);
-    } else {
-      // TODO: Handle other sub types of page
+    switch (this.subTypeOfPage) {
+      case 'Hot':
+        setTimeout(() => {
+         this.getMoreHotPosts(infiniteScroll);
+        }, 500);
+        break;
+      case 'New':
+        setTimeout(() => {
+          this.getMoreNewPosts(infiniteScroll);
+        }, 500);
+        break;
+      case 'Rising':
+        this.getMoreRisingPosts(infiniteScroll);
+        break;
+      case 'Controversial':
+        this.getMoreControversialPosts(infiniteScroll);
+        break;
+      case 'Top':
+        this.getMoreTopPosts(infiniteScroll);
+        break;
     }
   }
 

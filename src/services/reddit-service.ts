@@ -25,27 +25,62 @@ export class RedditService implements OnInit {
   ngOnInit() {
   }
 
+  getPostsBoilerPlateCode(submissions, fetchMoreAmount, resolve) {
+    let posts = [];
+
+    _.forEach(submissions, (submission) => {
+      posts.push(submission);
+    });
+
+    if (fetchMoreAmount > 0) {
+      let newPosts = [];
+      submissions.fetchMore({amount: fetchMoreAmount, append: false}).then(extendedPosts => {
+        _.forEach(extendedPosts, (extendedPost) => {
+          newPosts.push(extendedPost);
+        });
+        resolve(newPosts.slice(-25));
+      });
+    } else {
+      resolve(posts);
+    }
+  }
+
   getHotPosts(subreddit?, fetchMoreAmount?) {
     return new Promise((resolve, reject) => {
       this.reddit.getHot(subreddit).then((submissions) => {
-        let posts = [];
+        this.getPostsBoilerPlateCode(submissions, fetchMoreAmount, resolve);
+      }).catch(error => reject(error));
+    });
+  }
 
-        _.forEach(submissions, (submission) => {
-          posts.push(submission);
-        });
+  getNewPosts(subreddit?, fetchMoreAmount?) {
+    return new Promise((resolve, reject) => {
+      this.reddit.getNew(subreddit).then((submissions) => {
+        this.getPostsBoilerPlateCode(submissions, fetchMoreAmount, resolve);
+      }).catch(error => reject(error));
+    });
+  }
 
-        if (fetchMoreAmount > 0) {
-          let newPosts = [];
-          submissions.fetchMore({amount: fetchMoreAmount, append: false}).then(extendedPosts => {
-            _.forEach(extendedPosts, (extendedPost) => {
-              newPosts.push(extendedPost);
-            });
-            resolve(newPosts.slice(-25));
-          });
-        } else {
-          resolve(posts);
-        }
+  getRisingPosts(subreddit?, fetchMoreAmount?) {
+    return new Promise((resolve, reject) => {
+      this.reddit.getRising(subreddit).then((submissions) => {
+        this.getPostsBoilerPlateCode(submissions, fetchMoreAmount, resolve);
+      }).catch(error => reject(error));
+    });
+  }
 
+  getControversialPosts(subreddit?, fetchMoreAmount?) {
+    return new Promise((resolve, reject) => {
+      this.reddit.getControversial(subreddit).then((submissions) => {
+        this.getPostsBoilerPlateCode(submissions, fetchMoreAmount, resolve);
+      }).catch(error => reject(error));
+    });
+  }
+
+  getTopPosts(subreddit?, fetchMoreAmount?) {
+    return new Promise((resolve, reject) => {
+      this.reddit.getTop(subreddit).then((submissions) => {
+        this.getPostsBoilerPlateCode(submissions, fetchMoreAmount, resolve);
       }).catch(error => reject(error));
     });
   }
