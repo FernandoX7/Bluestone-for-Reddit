@@ -290,7 +290,11 @@ export class Home implements OnInit {
     if (post.thumbnail !== 'default' && post.thumbnail !== 'self') {
       title = post.title.substring(0, 35);
     } else {
-      title = post.title.substring(0, 70);
+      if (post.link_flair_text) {
+        title = post.title.substring(0, 60);
+      } else {
+        title = post.title.substring(0, 70);
+      }
     }
 
     if (title.length >= 35) {

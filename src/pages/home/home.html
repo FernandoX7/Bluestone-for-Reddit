@@ -44,7 +44,7 @@
     <ion-card class="card" *ngFor="let post of posts">
       <ion-row>
         <ion-col (tap)="goToItemDetail(post)" class="info-column">
-          <span class="title">{{truncateTitle(post)}}</span>
+          <span class="post-title">{{truncateTitle(post)}}</span>
           <br/>
           <span class="subreddit">{{post.subreddit.display_name}}</span>
           <span *ngIf="hasLinkFlair(post.link_flair_text)" class="bullet">&sdot;</span>
