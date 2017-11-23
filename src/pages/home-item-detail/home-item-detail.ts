@@ -19,7 +19,7 @@ export class HomeItemDetail implements OnInit {
 
   constructor(public navParams: NavParams, public commentsService: CommentsService) {
     // If we navigated to this page, we will have an item available as a nav param
-    this.selectedItem = navParams.get('feedItem');
+    this.selectedItem = navParams.get('feedPost');
     console.log('Successfully passed news feed item ' + moment().format("M/D/YY - h:mm:ss a"), this.selectedItem);
     this.post = this.selectedItem.data;
     this.retrieveComments();
