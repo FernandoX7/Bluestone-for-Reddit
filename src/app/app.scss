@@ -170,7 +170,11 @@
 
 // Search FAB
 .search-fab {
-  background-color: #ff5252 !important;
+  bottom: 15px !important;
+  right: 15px !important;
+  button {
+    background-color: #ff5252 !important;
+  }
 }
 
 // Popover
