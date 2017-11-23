@@ -23,7 +23,6 @@ export class UserSearch implements OnInit {
   feed: any;
   typeOfPage: string;
   subTypeOfPage: any;
-  isThereData: boolean;
   loader: any;
   user = {};
   posts: any;
@@ -135,29 +134,11 @@ export class UserSearch implements OnInit {
     });
 
     popover.onDidDismiss(data => {
-
       if (data) {
         this.subTypeOfPage = data.newSubTypeOfPage;
         this.loadSubType(data.newSubTypeOfPage);
       }
-
     });
-
-  }
-
-  private getHoursAgo(created_utc: any) {
-    let currentTime = moment();
-    let createdAt = moment.unix(created_utc);
-    let hoursAgo = currentTime.diff(createdAt, 'hours');
-    if (hoursAgo <= 23) {
-      return hoursAgo + 'h';
-    } else if (hoursAgo >= 24 && hoursAgo <= 8759) {
-      let daysAgo = currentTime.diff(createdAt, 'days');
-      return daysAgo + 'd';
-    } else if (hoursAgo >= 8760) {
-      let yearsAgo = currentTime.diff(createdAt, 'years');
-      return yearsAgo + 'y';
-    }
   }
 
   presentToast(message) {
@@ -181,64 +162,77 @@ export class UserSearch implements OnInit {
     this.subTypeOfPage = 'Overview'; // Default
   }
 
-  /**
-   * Handles loading the news feed
-   * @param data - JSON data returned from the service
-   */
-  loadFeed(data) {
-    // Feed loaded - dismiss loading popup
-    this.loader.dismissAll();
-
-    data = data.data.children;
-    this.feed = data;
-
-    // Add higher quality thumbnails
-    for (var i = 0; i < data.length; i++) {
-
-      // Get hours posted ago
-      this.feed[i].data['hoursAgo'] = this.getHoursAgo(this.feed[i].data.created_utc);
-
-      // If there's no .preview property - it's an all text post
-      if (typeof data[i].data.preview !== 'undefined') {
-        // Iterate through the resolutions array to find the highest resolution for that picture
-        let maximumResolution = 10;
-        let selectedItemsResolutions = data[i].data.preview.images[0].resolutions;
-
-        // Check if it's a gif
-        if (typeof data[i].data.preview.images[0].variants.gif !== 'undefined') {
-          selectedItemsResolutions = data[i].data.preview.images[0].variants.gif.resolutions;
-
-          while (maximumResolution > 0) {
-            if (typeof selectedItemsResolutions[maximumResolution] === 'undefined') {
-              maximumResolution--;
-            } else {
-              // Make the url actually point to the image and add it as a property to the object
-              let thumbnailImageUrl = selectedItemsResolutions[maximumResolution].url;
-              thumbnailImageUrl = _.replace(thumbnailImageUrl, new RegExp('&amp;', 'g'), '&');
-              data[i].data['gifImage'] = thumbnailImageUrl;
-              break;
-            }
-          }
-
-        }
-
-        // Reset variable back to normal images not gifs
-        selectedItemsResolutions = data[i].data.preview.images[0].resolutions;
-
-        while (maximumResolution > 0) {
-          if (typeof selectedItemsResolutions[maximumResolution] === 'undefined') {
-            maximumResolution--;
-          } else {
-            // Make the url actually point to the image and add it as a property to the object
-            let thumbnailImageUrl = selectedItemsResolutions[maximumResolution].url;
-            thumbnailImageUrl = _.replace(thumbnailImageUrl, new RegExp('&amp;', 'g'), '&');
-            data[i].data['thumbnailImage'] = thumbnailImageUrl;
-            break;
-          }
-        }
+  truncateTitle(post) {
+    let title = '';
+    if (post.thumbnail !== 'default' && post.thumbnail !== 'self') {
+      title = post.title.substring(0, 35);
+    } else {
+      if (post.link_flair_text) {
+        title = post.title.substring(0, 60);
+      } else {
+        title = post.title.substring(0, 70);
       }
     }
 
+    if (title.length >= 35) {
+      return title + '...';
+    } else {
+      return title;
+    }
+  }
+
+  truncateCommentTitle(title) {
+    if (title.length >= 140) {
+      return title.substring(0, 140) + '...';
+    } else {
+      return title;
+    }
+  }
+
+  hasLinkFlair(linkFlair) {
+    return !_.isNil(linkFlair) && linkFlair !== ''
+  }
+
+  // Adds K to a number if greaters then 999 - Ex: 4.5K
+  formatToThousand(votes) {
+    return votes > 999 ? (votes / 1000).toFixed(1) + 'K' : votes;
+  }
+
+  postIsGilded(gildedAmount) {
+    return gildedAmount > 0;
+  }
+
+  hasThumbnail(post) {
+    return post.thumbnailImage;
+  }
+
+  decodeHtml(html) {
+    let txt = document.createElement("textarea");
+    txt.innerHTML = html;
+    return txt.value;
+  }
+
+  isUserSubmittedPost(contentType) {
+    return contentType === 'Submission';
+  }
+
+  isUserComment(contentType) {
+    return contentType === 'Comment';
+  }
+
+  private getHoursAgo(created_utc: any) {
+    var currentTime = moment();
+    var createdAt = moment.unix(created_utc);
+    var hoursAgo = currentTime.diff(createdAt, 'hours');
+    if (hoursAgo <= 23) {
+      return hoursAgo + 'h';
+    } else if (hoursAgo >= 24 && hoursAgo <= 8759) {
+      var daysAgo = currentTime.diff(createdAt, 'days');
+      return daysAgo + 'd';
+    } else if (hoursAgo >= 8760) {
+      var yearsAgo = currentTime.diff(createdAt, 'years');
+      return yearsAgo + 'y';
+    }
   }
 
 }

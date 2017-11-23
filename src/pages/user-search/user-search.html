@@ -34,45 +34,66 @@
   </div>
 
   <ion-list>
-    <div class="no-data-dialog" *ngIf="isThereData === false">There doesn't appear to be anything here</div>
-
+    <!--TODO: Throw error message if no user found-->
     <ion-card class="card" *ngFor="let post of posts">
-      <ion-row>
-        <ion-col padding (tap)="goToItemDetail(post)">
-          <span class="title">{{post.title | slice: 0: (post.thumbnail !== 'default' && post.thumbnail !== 'self' ? 35 : 85) }}</span>
-          <span *ngIf="post.link_title != undefined"
-                class="title">{{post.link_title | slice: 0:80 }}</span>
-          <span *ngIf="post.title != undefined && post.title.length > 80" class="title">...</span>
-          <span *ngIf="post.link_title != undefined && post.link_title.length > 80"
-                class="title">...</span>
+
+      <ion-row *ngIf="isUserComment(post.contentType)">
+        <ion-col (tap)="goToItemDetail(post)" class="info-comment-column">
+          <span class="author-name">{{post.author.name}}</span>
+          <span class="upvotes">
+            <ion-icon name="arrow-up" class="comments-icon"></ion-icon>
+          </span>
+          <span class="upvotes-icon">{{formatToThousand(post.ups)}}</span>
+          <span class="posted-time">{{getHoursAgo(post.created_utc)}}</span>
+          <span class="gilded" *ngIf="postIsGilded(post.gilded)">x{{post.gilded}}</span>
+          <div class="post-title">{{truncateCommentTitle(post.body)}}</div>
           <br/>
 
-          <span *ngIf="post.hasOwnProperty('body')"
-                class="comment-body">{{post.body | slice: 0:75}}</span>
-          <span *ngIf="post.hasOwnProperty('body') && post.body.length > 75"
-                class="comment-body">...</span>
-          <br *ngIf="post.hasOwnProperty('body')"/>
+          <div class="comment-parent">
+            <span class="comment-parent-title">{{post.link_title}}</span>
+            <div class="comment-parent-subreddit">{{post.subreddit.display_name}}</div>
+          </div>
 
-          <span class="subreddit">{{post.subreddit}}</span>
-          <span *ngIf="post.hasOwnProperty('link_flair_text') && post.link_flair_text !== null"
-                class="bullet">&sdot;</span>
-          <span *ngIf="post.hasOwnProperty('link_flair_text')" class="link-flair">{{post.link_flair_text}}</span>
-          <span *ngIf="post.hasOwnProperty('link_flair_text')" class="bullet">&sdot;</span>
+        </ion-col>
+        <ion-col [ngStyle]="{'background-image': 'url(' + post.thumbnailImage + ')'}"
+                 class="thumbnail-column"
+                 *ngIf="hasThumbnail(post)"
+                 (tap)="openImage(post)">
+        </ion-col>
+      </ion-row>
+
+      <ion-row *ngIf="isUserSubmittedPost(post.contentType)">
+        <ion-col (tap)="goToItemDetail(post)" class="info-column">
+          <span class="post-title">{{truncateTitle(post)}}</span>
+          <br/>
+          <span class="subreddit">{{post.subreddit.display_name}}</span>
+          <span *ngIf="hasLinkFlair(post.link_flair_text)" class="bullet">&sdot;</span>
+          <span *ngIf="hasLinkFlair(post.link_flair_text)" class="link-flair">{{post.link_flair_text}}</span>
+          <span class="bullet">&sdot;</span>
           <span class="url">{{post.domain}}</span>
           <span class="bullet">&sdot;</span>
           <span class="posted-time">{{post.hoursAgo}}</span>
           <br/>
-          <span class="upvotes">{{post.ups}}</span>
+          <span class="upvotes">
+            <ion-icon name="arrow-up" class="comments-icon"></ion-icon>
+          </span>
+          <span class="upvotes">{{formatToThousand(post.ups)}}
+          </span>
           <span class="bullet">&sdot;</span>
-          <span *ngIf="post.hasOwnProperty('num_comments')" class="comments">{{post.num_comments}} comments</span>
-          <span *ngIf="!post.hasOwnProperty('num_comments')" class="comments">comments not available</span>
-          <span class="gilded" *ngIf="post.gilded > 0">&nbsp;x{{post.gilded}}</span>
+          <span class="comments">
+            <ion-icon name="chatbubbles" class="comments-icon"></ion-icon>
+          </span>
+          <span class="comments">{{formatToThousand(post.num_comments)}}</span>
+          <span class="bullet" *ngIf="postIsGilded(post.gilded)">&sdot;</span>
+          <span class="gilded" *ngIf="postIsGilded(post.gilded)">x{{post.gilded}}</span>
         </ion-col>
         <ion-col [ngStyle]="{'background-image': 'url(' + post.thumbnailImage + ')'}"
-                 class="thumbnail-column" *ngIf="post.hasOwnProperty('thumbnailImage')" width-33
+                 class="thumbnail-column"
+                 *ngIf="hasThumbnail(post)"
                  (tap)="openImage(post)">
         </ion-col>
       </ion-row>
+
     </ion-card>
 
   </ion-list>

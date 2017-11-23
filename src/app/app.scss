@@ -63,6 +63,63 @@
   padding: 15px;
 }
 
+.info-comment-column {
+  padding: 10px;
+
+  .author-name {
+    color: #c1c2c5;
+    font-weight: 600;
+    font-size: 1.5rem;
+  }
+
+  .upvotes {
+    margin-left: 5px;
+    color: #a0a2a7;
+    font-size: 1.60rem;
+  }
+
+  .upvotes-icon {
+    position: relative;
+    top: 1px;
+    margin-left: 3px;
+    color: #a0a2a7;
+    font-size: 1.60rem;
+  }
+
+  .posted-time {
+    color: #a0a2a7;
+    margin-left: 3px;
+  }
+
+  .gilded {
+    color: #F29010;
+    font-size: 1.75rem;
+    margin-left: 3px;
+  }
+
+  .post-title {
+    color: #ededed;
+    font-size: 1.65rem;
+    margin-top: 5px;
+  }
+
+  .comment-parent {
+    background-color: #0d1219;
+    padding: 8px;
+    border-radius: 5px;
+    margin-top: -10px;
+
+    .comment-parent-title {
+      color: #a0a2a7;
+    }
+
+    .comment-parent-subreddit {
+      color: #ff5252;
+      margin-top: 5px;
+    }
+  }
+}
+
 .thumbnail {
   display: inline-block;
   height: 100%;
