@@ -236,6 +236,9 @@ export class Home implements OnInit {
           }
         }
       }
+
+      // Decode HTML
+      post['selftext_html_parsed'] = this.decodeHtml(post.selftext_html);
     });
   }
 
@@ -311,5 +314,11 @@ export class Home implements OnInit {
 
   hasThumbnail(post) {
     return post.thumbnailImage;
+  }
+
+  decodeHtml(html) {
+    let txt = document.createElement("textarea");
+    txt.innerHTML = html;
+    return txt.value;
   }
 }
