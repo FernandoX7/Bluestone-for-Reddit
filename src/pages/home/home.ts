@@ -23,7 +23,7 @@ export class Home implements OnInit {
 
   posts: any;
   typeOfPage: string; // Front or All
-  subTypeOfPage: any;
+  subTypeOfPage: any; // hot, new, rising, etc
   loader: any;
   amountOfMoreData = 0;
 
