@@ -3,7 +3,7 @@ import * as _ from 'lodash';
 import * as moment from 'moment';
 import {
   NavController, ModalController, NavParams, PopoverController, AlertController,
-  LoadingController, Content
+  LoadingController, Content, Events
 } from 'ionic-angular';
 import {HomeItemDetail} from "../home-item-detail/home-item-detail";
 import {ThumbnailImage} from "../popups/thumbnail-image";
@@ -33,7 +33,12 @@ export class Home implements OnInit {
               private popoverCtrl: PopoverController,
               private alertCtrl: AlertController,
               private loadingCtrl: LoadingController,
-              private reddit: RedditService) {
+              private reddit: RedditService,
+              public events: Events) {
+
+    events.subscribe('app.component:subreddit-search', (subreddit) => {
+      this.searchForSubreddit(subreddit);
+    });
   }
 
   ngOnInit() {
@@ -286,10 +291,7 @@ export class Home implements OnInit {
           handler: data => {
             data.title = data.title.trim();
             if (data.title !== '') {
-              this.content.scrollToTop();
-              this.subredditQuery = data.title;
-              this.subTypeOfPage = 'Hot';
-              this.getHotPosts(this.subredditQuery);
+              this.searchForSubreddit(data.title);
             }
           }
         }
@@ -481,5 +483,12 @@ export class Home implements OnInit {
     let txt = document.createElement("textarea");
     txt.innerHTML = html;
     return txt.value;
+  }
+
+  searchForSubreddit(subreddit) {
+    this.content.scrollToTop();
+    this.subredditQuery = subreddit;
+    this.subTypeOfPage = 'Hot';
+    this.getHotPosts(this.subredditQuery);
   }
 }
