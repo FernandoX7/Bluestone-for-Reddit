@@ -2,9 +2,6 @@ import {Injectable} from '@angular/core';
 import 'rxjs/add/operator/map';
 import {HttpClient} from "@angular/common/http";
 
-const BASE_URL: string = 'https://www.reddit.com/';
-const JSON_POSTFIX: string = '.json';
-
 @Injectable()
 export class CommentsService {
 
@@ -12,7 +9,7 @@ export class CommentsService {
   }
 
   fetchComments(post) {
-    let url: string = BASE_URL + post.permalink + JSON_POSTFIX;
+    let url: string = 'https://www.reddit.com/' + post.permalink + '.json';
     return this.http.get(url)
       .map(res => res[1].data.children.map(c => c.data).filter(c => c.body))
       .map(this.beautifyReplies.bind(this))

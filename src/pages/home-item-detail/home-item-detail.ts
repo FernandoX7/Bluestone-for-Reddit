@@ -15,20 +15,20 @@ export class HomeItemDetail implements OnInit {
   comments: any;
   loadedComments: boolean = false;
 
-  constructor(public navParams: NavParams, public commentsService: CommentsService) {
+  constructor(public navParams: NavParams, private commentsService: CommentsService) {
     this.post = navParams.get('feedPost');
     console.log('this.post', this.post);
-    // this.retrieveComments();
   }
 
   ngOnInit() {
+    this.retrieveComments();
   }
 
   retrieveComments() {
     this.commentsService.fetchComments(this.post).subscribe((comments) => {
       this.loadedComments = true;
       this.comments = comments;
-    })
+    });
   }
 
   hasThumbnail(post) {
