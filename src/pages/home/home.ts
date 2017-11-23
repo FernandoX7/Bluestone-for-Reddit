@@ -26,6 +26,7 @@ export class Home implements OnInit {
   subTypeOfPage: any; // hot, new, rising, etc
   loader: any;
   amountOfMoreData = 0;
+  subredditQuery: string = null;
 
   constructor(private navCtrl: NavController,
               private modalCtrl: ModalController,
@@ -42,8 +43,11 @@ export class Home implements OnInit {
     this.getHotPosts();
   }
 
-  getHotPosts() {
-    let subreddit = this.typeOfPage === 'All' ? 'all' : '';
+  getHotPosts(subreddit?) {
+    if (subreddit === undefined) {
+      subreddit = this.typeOfPage === 'All' ? 'all' : '';
+    }
+
     this.reddit.getHotPosts(subreddit).then((posts) => {
       this.loadFeed(posts, false);
     }).catch(err => {
@@ -54,8 +58,11 @@ export class Home implements OnInit {
     });
   }
 
-  getMoreHotPosts(infiniteScroll) {
-    let subreddit = this.typeOfPage === 'All' ? 'all' : undefined;
+  getMoreHotPosts(infiniteScroll, subreddit?) {
+    if (subreddit === undefined) {
+      subreddit = this.typeOfPage === 'All' ? 'all' : undefined;
+    }
+
     this.reddit.getHotPosts(subreddit, this.amountOfMoreData).then((posts) => {
       this.loadFeed(posts, true);
       infiniteScroll.complete();
@@ -67,8 +74,11 @@ export class Home implements OnInit {
     });
   }
 
-  getNewPosts() {
-    let subreddit = this.typeOfPage === 'All' ? 'all' : '';
+  getNewPosts(subreddit?) {
+    if (subreddit === undefined) {
+      subreddit = this.typeOfPage === 'All' ? 'all' : '';
+    }
+
     this.reddit.getNewPosts(subreddit).then((posts) => {
       this.loadFeed(posts, false);
     }).catch(err => {
@@ -79,8 +89,11 @@ export class Home implements OnInit {
     });
   }
 
-  getMoreNewPosts(infiniteScroll) {
-    let subreddit = this.typeOfPage === 'All' ? 'all' : undefined;
+  getMoreNewPosts(infiniteScroll, subreddit?) {
+    if (subreddit === undefined) {
+      subreddit = this.typeOfPage === 'All' ? 'all' : undefined;
+    }
+
     this.reddit.getNewPosts(subreddit, this.amountOfMoreData).then((posts) => {
       this.loadFeed(posts, true);
       infiniteScroll.complete();
@@ -92,8 +105,11 @@ export class Home implements OnInit {
     });
   }
 
-  getRisingPosts() {
-    let subreddit = this.typeOfPage === 'All' ? 'all' : '';
+  getRisingPosts(subreddit?) {
+    if (subreddit === undefined) {
+      subreddit = this.typeOfPage === 'All' ? 'all' : '';
+    }
+
     this.reddit.getRisingPosts(subreddit).then((posts) => {
       this.loadFeed(posts, false);
     }).catch(err => {
@@ -104,8 +120,11 @@ export class Home implements OnInit {
     });
   }
 
-  getMoreRisingPosts(infiniteScroll) {
-    let subreddit = this.typeOfPage === 'All' ? 'all' : undefined;
+  getMoreRisingPosts(infiniteScroll, subreddit?) {
+    if (subreddit === undefined) {
+      subreddit = this.typeOfPage === 'All' ? 'all' : undefined;
+    }
+
     this.reddit.getRisingPosts(subreddit, this.amountOfMoreData).then((posts) => {
       this.loadFeed(posts, true);
       infiniteScroll.complete();
@@ -117,8 +136,11 @@ export class Home implements OnInit {
     });
   }
 
-  getControversialPosts() {
-    let subreddit = this.typeOfPage === 'All' ? 'all' : '';
+  getControversialPosts(subreddit?) {
+    if (subreddit === undefined) {
+      subreddit = this.typeOfPage === 'All' ? 'all' : '';
+    }
+
     this.reddit.getControversialPosts(subreddit).then((posts) => {
       this.loadFeed(posts, false);
     }).catch(err => {
@@ -129,8 +151,11 @@ export class Home implements OnInit {
     });
   }
 
-  getMoreControversialPosts(infiniteScroll) {
-    let subreddit = this.typeOfPage === 'All' ? 'all' : undefined;
+  getMoreControversialPosts(infiniteScroll, subreddit?) {
+    if (subreddit === undefined) {
+      subreddit = this.typeOfPage === 'All' ? 'all' : undefined;
+    }
+
     this.reddit.getControversialPosts(subreddit, this.amountOfMoreData).then((posts) => {
       this.loadFeed(posts, true);
       infiniteScroll.complete();
@@ -142,8 +167,11 @@ export class Home implements OnInit {
     });
   }
 
-  getTopPosts() {
-    let subreddit = this.typeOfPage === 'All' ? 'all' : '';
+  getTopPosts(subreddit?) {
+    if (subreddit === undefined) {
+      subreddit = this.typeOfPage === 'All' ? 'all' : '';
+    }
+
     this.reddit.getTopPosts(subreddit).then((posts) => {
       this.loadFeed(posts, false);
     }).catch(err => {
@@ -154,8 +182,11 @@ export class Home implements OnInit {
     });
   }
 
-  getMoreTopPosts(infiniteScroll) {
-    let subreddit = this.typeOfPage === 'All' ? 'all' : undefined;
+  getMoreTopPosts(infiniteScroll, subreddit?) {
+    if (subreddit === undefined) {
+      subreddit = this.typeOfPage === 'All' ? 'all' : undefined;
+    }
+
     this.reddit.getTopPosts(subreddit, this.amountOfMoreData).then((posts) => {
       this.loadFeed(posts, true);
       infiniteScroll.complete();
@@ -172,21 +203,23 @@ export class Home implements OnInit {
     this.showLoadingPopup('Please wait...');
     this.content.scrollToTop();
 
+    let subreddit = !_.isNil(this.subredditQuery) ? this.subredditQuery : undefined;
+
     switch (subType) {
       case 'Hot':
-        this.getHotPosts();
+        this.getHotPosts(subreddit);
         break;
       case 'New':
-        this.getNewPosts();
+        this.getNewPosts(subreddit);
         break;
       case 'Rising':
-        this.getRisingPosts();
+        this.getRisingPosts(subreddit);
         break;
       case 'Controversial':
-        this.getControversialPosts();
+        this.getControversialPosts(subreddit);
         break;
       case 'Top':
-        this.getTopPosts();
+        this.getTopPosts(subreddit);
         break;
     }
   }
@@ -254,9 +287,10 @@ export class Home implements OnInit {
           handler: data => {
             data.title = data.title.trim();
             if (data.title !== '') {
-              this.navCtrl.push(SubredditSearch, {
-                searchValue: data.title
-              });
+              this.content.scrollToTop();
+              this.subredditQuery = data.title;
+              this.subTypeOfPage = 'Hot';
+              this.getHotPosts(this.subredditQuery);
             }
           }
         }
@@ -377,31 +411,32 @@ export class Home implements OnInit {
 
   loadMoreData(infiniteScroll) {
     this.amountOfMoreData = this.amountOfMoreData + 25;
+    let subreddit = !_.isNil(this.subredditQuery) ? this.subredditQuery : undefined;
 
     switch (this.subTypeOfPage) {
       case 'Hot':
         setTimeout(() => {
-          this.getMoreHotPosts(infiniteScroll);
+          this.getMoreHotPosts(infiniteScroll, subreddit);
         }, 500);
         break;
       case 'New':
         setTimeout(() => {
-          this.getMoreNewPosts(infiniteScroll);
+          this.getMoreNewPosts(infiniteScroll, subreddit);
         }, 500);
         break;
       case 'Rising':
         setTimeout(() => {
-          this.getMoreRisingPosts(infiniteScroll);
+          this.getMoreRisingPosts(infiniteScroll, subreddit);
         }, 500);
         break;
       case 'Controversial':
         setTimeout(() => {
-          this.getMoreControversialPosts(infiniteScroll);
+          this.getMoreControversialPosts(infiniteScroll, subreddit);
         }, 500);
         break;
       case 'Top':
         setTimeout(() => {
-          this.getMoreTopPosts(infiniteScroll);
+          this.getMoreTopPosts(infiniteScroll, subreddit);
         }, 500);
         break;
     }

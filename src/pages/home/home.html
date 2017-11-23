@@ -8,7 +8,8 @@
       <ion-row>
         <ion-col class="toolbar-title-column">
           <ion-title>
-            {{typeOfPage}}
+            <span *ngIf="!subredditQuery">{{typeOfPage}}</span>
+            <span *ngIf="subredditQuery">r/{{subredditQuery}}</span>
             <div class="sub-type">
               {{subTypeOfPage}}
             </div>
