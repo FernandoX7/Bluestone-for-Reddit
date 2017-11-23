@@ -19,6 +19,7 @@ import {StatusBar} from '@ionic-native/status-bar';
 import {SplashScreen} from '@ionic-native/splash-screen';
 import {HttpClientModule} from "@angular/common/http";
 import {RedditService} from "../services/reddit-service";
+import {ZoomPanDirective} from "../directives/zoom-pan";
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import {RedditService} from "../services/reddit-service";
     UserSearch,
     SortUserFeedPopover,
     SortSearchedSubredditPopover,
-    CommentsList
+    CommentsList,
+    ZoomPanDirective
   ],
   imports: [
     MomentModule,
