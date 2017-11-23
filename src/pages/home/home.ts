@@ -272,7 +272,6 @@ export class Home implements OnInit {
         this.subTypeOfPage = data.newSubTypeOfPage;
         this.loadSubType(data.newSubTypeOfPage);
       }
-
     });
   }
 
@@ -362,9 +361,8 @@ export class Home implements OnInit {
   determineNewsFeedToShow() {
     this.typeOfPage = this.navParams.get('typeOfPage');
     this.subTypeOfPage = 'Hot'; // Front page
-    if (this.typeOfPage === undefined) {
-      this.typeOfPage = 'Front page';
-    } else if (this.typeOfPage === null) {
+
+    if (_.isNil(this.typeOfPage)) {
       this.typeOfPage = 'Front page';
     }
   }
