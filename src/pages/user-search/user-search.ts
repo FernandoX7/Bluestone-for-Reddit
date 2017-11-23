@@ -42,7 +42,41 @@ export class UserSearch implements OnInit {
   ngOnInit() {
     this.showLoadingPopup('Please wait...');
     this.determineNewsFeedToShow();
+    this.setupUser();
 
+    /**
+    this.data
+      .getUser(this.username)
+      .subscribe(
+        data => {
+          this.loadFeed(data);
+          data = data.data.children;
+          console.log(this.username, 'data', data);
+
+          // Check if there is any data at all
+          if (data.length < 1) {
+            this.isThereData = false;
+          } else {
+            this.isThereData = true;
+          }
+
+        },
+        err => {
+          console.error('There was an error retrieving ', this.username, err);
+          if (err.statusText === '') {
+            this.presentToast('Error: Failed to retrieve ' + this.username);
+          } else {
+            this.presentToast('Error: ' + err.statusText);
+          }
+          this.loader.dismissAll();
+        },
+        () => console.log('Successfully retrieved', this.username, ' data')
+      );
+     **/
+
+  }
+
+  setupUser() {
     this.reddit.getUserInfo(this.username).then((userInfo) => {
       this.user = {
         id: userInfo['id'],
@@ -77,37 +111,6 @@ export class UserSearch implements OnInit {
     }).catch(err => {
       console.log('Error getting the users comments', err);
     });
-
-    /**
-    this.data
-      .getUser(this.username)
-      .subscribe(
-        data => {
-          this.loadFeed(data);
-          data = data.data.children;
-          console.log(this.username, 'data', data);
-
-          // Check if there is any data at all
-          if (data.length < 1) {
-            this.isThereData = false;
-          } else {
-            this.isThereData = true;
-          }
-
-        },
-        err => {
-          console.error('There was an error retrieving ', this.username, err);
-          if (err.statusText === '') {
-            this.presentToast('Error: Failed to retrieve ' + this.username);
-          } else {
-            this.presentToast('Error: ' + err.statusText);
-          }
-          this.loader.dismissAll();
-        },
-        () => console.log('Successfully retrieved', this.username, ' data')
-      );
-     **/
-
   }
 
   // Update news feed based on new sub type
