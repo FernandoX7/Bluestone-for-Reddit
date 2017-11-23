@@ -1,5 +1,7 @@
 <ion-list no-lines class="comments-list">
-  <ion-item *ngFor="let comment of comments; trackBy: trackByCommentId">
+  <ion-item *ngFor="let comment of comments; trackBy: trackByCommentId"
+            class="comment-item"
+            [ngStyle]="{'border-left': comment.expanded ? expandedCommentBorder : defaultCommentBorder}">
     <p>
       <span class="comment-author">{{comment.author}}</span>
       <span class="comment-score">&nbsp;{{comment.score}}</span>

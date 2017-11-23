@@ -3,7 +3,6 @@
   ion-item {
     margin-top: 5px;
     background-color: #1b2836;
-    border-left: 1px solid #a0a2a7 !important;
     padding-left: 10px;
 
     > .item-inner {
@@ -49,6 +48,11 @@
       margin-bottom: 5px;
       margin-top: 5px;
     }
+  }
+
+  .comment-item {
+    position: relative;
+    bottom: 4px;
   }
 
   .line-seperator {

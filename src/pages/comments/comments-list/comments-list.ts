@@ -8,6 +8,9 @@ import {Component, Input} from '@angular/core';
 export class CommentsList {
 
   @Input() comments;
+  randomColor = require('randomcolor');
+  defaultCommentBorder = '1px solid #a0a2a7';
+  expandedCommentBorder = this.getRandomCommentBorderColor();
 
   constructor() {
   }
@@ -20,5 +23,9 @@ export class CommentsList {
 
   trackByCommentId(index, comment) {
     return comment.id;
+  }
+
+  getRandomCommentBorderColor() {
+    return '1px solid' + this.randomColor.randomColor();
   }
 }
