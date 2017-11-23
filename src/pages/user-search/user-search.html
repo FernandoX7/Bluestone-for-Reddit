@@ -1,14 +1,16 @@
 <ion-header>
   <ion-navbar>
+
     <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
+
     <ion-grid>
       <ion-row>
         <ion-col class="toolbar-title-column">
           <ion-title>
             {{passedUserName}}
-            <div style="font-size: 1.35rem" >
+            <div style="font-size: 1.35rem">
               {{subTypeOfPage}}
             </div>
           </ion-title>
@@ -20,7 +22,6 @@
         </ion-col>
       </ion-row>
     </ion-grid>
-
   </ion-navbar>
 </ion-header>
 
@@ -41,8 +42,10 @@
                 class="title">...</span>
           <br/>
 
-          <span *ngIf="feedItem.data.hasOwnProperty('body')" class="comment-body">{{feedItem.data.body | slice: 0:75}}</span>
-          <span *ngIf="feedItem.data.hasOwnProperty('body') && feedItem.data.body.length > 75" class="comment-body">...</span>
+          <span *ngIf="feedItem.data.hasOwnProperty('body')"
+                class="comment-body">{{feedItem.data.body | slice: 0:75}}</span>
+          <span *ngIf="feedItem.data.hasOwnProperty('body') && feedItem.data.body.length > 75"
+                class="comment-body">...</span>
           <br *ngIf="feedItem.data.hasOwnProperty('body')"/>
 
           <span class="subreddit">{{feedItem.data.subreddit}}</span>
