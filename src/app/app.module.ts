@@ -18,6 +18,7 @@ import {BrowserModule} from '@angular/platform-browser';
 import {StatusBar} from '@ionic-native/status-bar';
 import {SplashScreen} from '@ionic-native/splash-screen';
 import {HttpClientModule} from "@angular/common/http";
+import {RedditService} from "../services/reddit-service";
 
 @NgModule({
   declarations: [
@@ -55,7 +56,8 @@ import {HttpClientModule} from "@angular/common/http";
     Constants,
     GetSubredditService,
     StatusBar,
-    SplashScreen
+    SplashScreen,
+    RedditService
   ]
 })
 
