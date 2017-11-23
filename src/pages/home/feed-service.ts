@@ -2,7 +2,7 @@
  * Created by fernando on 11/2/16.
  */
 import {Injectable, OnInit} from '@angular/core';
-import {Http} from '@angular/http';
+import {HttpClient} from "@angular/common/http";
 import 'rxjs/add/operator/map';
 import {Constants} from "../util/Constants";
 
@@ -15,7 +15,7 @@ export class FeedService implements OnInit {
 
   http: any;
 
-  constructor(http: Http, private constants: Constants) {
+  constructor(http: HttpClient, private constants: Constants) {
     this.http = http;
   }
 
@@ -48,18 +48,16 @@ export class FeedService implements OnInit {
   }
 
   getFeed(typeOfPage) {
-   let type = this.getTypeOfPage(typeOfPage, false);
+    let type = this.getTypeOfPage(typeOfPage, false);
     return this.http
-      .get(this.constants.URL +  type)
-      .map(res => res.json());
+      .get(this.constants.URL + type);
   }
 
   // Load more feed while scrolling
   getMoreFeed(typeOfPage, afterPageCode) {
     let type = this.getTypeOfPage(typeOfPage, false);
     return this.http
-      .get(this.constants.URL +  type + '?after=' + afterPageCode)
-      .map(res => res.json());
+      .get(this.constants.URL + type + '?after=' + afterPageCode);
   }
 
   getSubTypeFeed(typeOfPage, subTypeOfPage) {
@@ -67,8 +65,7 @@ export class FeedService implements OnInit {
     subTypeOfPage = subTypeOfPage.toLowerCase();
     let feed = type + subTypeOfPage + this.constants.ENDING;
     return this.http
-      .get(feed)
-      .map(res => res.json());
+      .get(feed);
   }
 
   // Load more feed while scrolling
@@ -77,8 +74,7 @@ export class FeedService implements OnInit {
     subTypeOfPage = subTypeOfPage.toLowerCase();
     let feed = type + subTypeOfPage + this.constants.ENDING + '?after=' + afterPageCode;
     return this.http
-      .get(feed)
-      .map(res => res.json());
+      .get(feed);
   }
 
 }
