@@ -45,7 +45,8 @@ export class Home implements OnInit {
   }
 
   getHotPosts() {
-    this.reddit.getHotPosts().then((posts) => {
+    let subreddit = this.typeOfPage === 'All' ? 'all' : '';
+    this.reddit.getHotPosts(subreddit).then((posts) => {
       this.loadFeed(posts, false);
     }).catch(err => {
       console.log('Error getting hot posts', err);
@@ -56,7 +57,8 @@ export class Home implements OnInit {
   }
 
   getMoreHotPosts(infiniteScroll) {
-    this.reddit.getHotPosts(undefined, this.amountOfMoreData).then((posts) => {
+    let subreddit = this.typeOfPage === 'All' ? 'all' : undefined;
+    this.reddit.getHotPosts(subreddit, this.amountOfMoreData).then((posts) => {
       this.loadFeed(posts, true);
       infiniteScroll.complete();
     }).catch(err => {
@@ -68,7 +70,8 @@ export class Home implements OnInit {
   }
 
   getNewPosts() {
-    this.reddit.getNewPosts().then((posts) => {
+    let subreddit = this.typeOfPage === 'All' ? 'all' : '';
+    this.reddit.getNewPosts(subreddit).then((posts) => {
       this.loadFeed(posts, false);
     }).catch(err => {
       console.log('Error getting new posts', err);
@@ -79,7 +82,8 @@ export class Home implements OnInit {
   }
 
   getMoreNewPosts(infiniteScroll) {
-    this.reddit.getNewPosts(undefined, this.amountOfMoreData).then((posts) => {
+    let subreddit = this.typeOfPage === 'All' ? 'all' : undefined;
+    this.reddit.getNewPosts(subreddit, this.amountOfMoreData).then((posts) => {
       this.loadFeed(posts, true);
       infiniteScroll.complete();
     }).catch(err => {
@@ -91,7 +95,8 @@ export class Home implements OnInit {
   }
 
   getRisingPosts() {
-    this.reddit.getRisingPosts().then((posts) => {
+    let subreddit = this.typeOfPage === 'All' ? 'all' : '';
+    this.reddit.getRisingPosts(subreddit).then((posts) => {
       this.loadFeed(posts, false);
     }).catch(err => {
       console.log('Error getting rising posts', err);
@@ -102,7 +107,8 @@ export class Home implements OnInit {
   }
 
   getMoreRisingPosts(infiniteScroll) {
-    this.reddit.getRisingPosts(undefined, this.amountOfMoreData).then((posts) => {
+    let subreddit = this.typeOfPage === 'All' ? 'all' : undefined;
+    this.reddit.getRisingPosts(subreddit, this.amountOfMoreData).then((posts) => {
       this.loadFeed(posts, true);
       infiniteScroll.complete();
     }).catch(err => {
@@ -114,7 +120,8 @@ export class Home implements OnInit {
   }
 
   getControversialPosts() {
-    this.reddit.getControversialPosts().then((posts) => {
+    let subreddit = this.typeOfPage === 'All' ? 'all' : '';
+    this.reddit.getControversialPosts(subreddit).then((posts) => {
       this.loadFeed(posts, false);
     }).catch(err => {
       console.log('Error getting controversial posts', err);
@@ -125,7 +132,8 @@ export class Home implements OnInit {
   }
 
   getMoreControversialPosts(infiniteScroll) {
-    this.reddit.getControversialPosts(undefined, this.amountOfMoreData).then((posts) => {
+    let subreddit = this.typeOfPage === 'All' ? 'all' : undefined;
+    this.reddit.getControversialPosts(subreddit, this.amountOfMoreData).then((posts) => {
       this.loadFeed(posts, true);
       infiniteScroll.complete();
     }).catch(err => {
@@ -137,7 +145,8 @@ export class Home implements OnInit {
   }
 
   getTopPosts() {
-    this.reddit.getTopPosts().then((posts) => {
+    let subreddit = this.typeOfPage === 'All' ? 'all' : '';
+    this.reddit.getTopPosts(subreddit).then((posts) => {
       this.loadFeed(posts, false);
     }).catch(err => {
       console.log('Error getting top posts', err);
@@ -148,7 +157,8 @@ export class Home implements OnInit {
   }
 
   getMoreTopPosts(infiniteScroll) {
-    this.reddit.getTopPosts(undefined, this.amountOfMoreData).then((posts) => {
+    let subreddit = this.typeOfPage === 'All' ? 'all' : undefined;
+    this.reddit.getTopPosts(subreddit, this.amountOfMoreData).then((posts) => {
       this.loadFeed(posts, true);
       infiniteScroll.complete();
     }).catch(err => {
