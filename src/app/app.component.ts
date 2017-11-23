@@ -1,52 +1,48 @@
-import { Component, ViewChild } from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {Nav, Platform, AlertController} from 'ionic-angular';
-import { StatusBar, Splashscreen } from 'ionic-native';
+import {StatusBar} from '@ionic-native/status-bar';
+import {SplashScreen} from '@ionic-native/splash-screen';
 
-import { Home } from '../pages/home/home';
+import {Home} from '../pages/home/home';
 import {SubredditSearch} from "../pages/subreddit-search/subreddit-search";
 import {UserSearch} from "../pages/user-search/user-search";
-
 
 @Component({
   templateUrl: 'app.html'
 })
+
 export class MyApp {
   @ViewChild(Nav) nav: Nav;
 
   rootPage: any = Home;
 
-  pages: Array<{title: string, component: any, icon: string, typeOfPage: string}>;
-  subscriptions: Array<{title: string}>;
+  pages: Array<{ title: string, component: any, icon: string, typeOfPage: string }>;
+  subscriptions: Array<{ title: string }>;
 
-  constructor(public platform: Platform, public alertCtrl: AlertController) {
-    this.initializeApp();
+  constructor(public platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen, public alertCtrl: AlertController) {
+    platform.ready().then(() => {
+      // Okay, so the platform is ready and our plugins are available.
+      // Here you can do any higher level native things you might need.
+      statusBar.styleDefault();
+      splashScreen.hide();
+    });
 
     // used for an example of ngFor and navigation
     this.pages = [
-      { title: 'Home', component: Home, icon: 'home', typeOfPage: 'Front page' },
-      { title: 'Front page', component: Home, icon: 'trending-up', typeOfPage: 'Front page' },
-      { title: 'All', component: Home, icon: 'podium', typeOfPage: 'All' },
+      {title: 'Home', component: Home, icon: 'home', typeOfPage: 'Front page'},
+      {title: 'Front page', component: Home, icon: 'trending-up', typeOfPage: 'Front page'},
+      {title: 'All', component: Home, icon: 'podium', typeOfPage: 'All'},
       // New Line
-      { title: 'Search', component: Home, icon: 'search', typeOfPage: null },
-      { title: 'Settings', component: Home, icon: 'settings', typeOfPage: null },
+      {title: 'Search', component: Home, icon: 'search', typeOfPage: null},
+      {title: 'Settings', component: Home, icon: 'settings', typeOfPage: null},
     ];
 
     this.subscriptions = [
-      { title: 'Android' },
-      { title: 'Camaro' },
-      { title: 'iOS' },
-      { title: 'Mustang' }
+      {title: 'Android'},
+      {title: 'Camaro'},
+      {title: 'iOS'},
+      {title: 'Mustang'}
     ];
-
-  }
-
-  initializeApp() {
-    this.platform.ready().then(() => {
-      // Okay, so the platform is ready and our plugins are available.
-      // Here you can do any higher level native things you might need.
-      StatusBar.styleLightContent();
-      Splashscreen.hide();
-    });
   }
 
   showSearchPrompt() {

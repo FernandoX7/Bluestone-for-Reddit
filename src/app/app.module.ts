@@ -1,8 +1,8 @@
-import { NgModule } from '@angular/core';
-import { IonicApp, IonicModule } from 'ionic-angular';
-import { MyApp } from './app.component';
-import { Home } from '../pages/home/home';
-import { HomeItemDetail } from '../pages/home-item-detail/home-item-detail';
+import {NgModule} from '@angular/core';
+import {IonicApp, IonicModule} from 'ionic-angular';
+import {MyApp} from './app.component';
+import {Home} from '../pages/home/home';
+import {HomeItemDetail} from '../pages/home-item-detail/home-item-detail';
 import {FeedService} from "../pages/home/feed-service";
 import {ThumbnailImage} from "../pages/popups/thumbnail-image";
 import {SubredditSearch} from "../pages/subreddit-search/subreddit-search";
@@ -14,6 +14,10 @@ import {SortSearchedSubredditPopover} from "../pages/subreddit-search/sort-searc
 import {CommentsList} from "../pages/comments/comments-list/comments-list";
 import {MomentModule} from "angular2-moment";
 import {Constants} from "../pages/util/Constants";
+import {BrowserModule} from '@angular/platform-browser';
+import {StatusBar} from '@ionic-native/status-bar';
+import {SplashScreen} from '@ionic-native/splash-screen';
+import {HttpModule} from '@angular/http';
 
 @NgModule({
   declarations: [
@@ -29,8 +33,10 @@ import {Constants} from "../pages/util/Constants";
     CommentsList
   ],
   imports: [
-    IonicModule.forRoot(MyApp, { mode: 'md' }),
-    MomentModule
+    IonicModule.forRoot(MyApp, {mode: 'md'}),
+    MomentModule,
+    BrowserModule,
+    HttpModule,
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -44,6 +50,14 @@ import {Constants} from "../pages/util/Constants";
     SortUserFeedPopover,
     SortSearchedSubredditPopover
   ],
-  providers: [FeedService, Constants, GetSubredditService]
+  providers: [
+    FeedService,
+    Constants,
+    GetSubredditService,
+    StatusBar,
+    SplashScreen
+  ]
 })
-export class AppModule {}
+
+export class AppModule {
+}
