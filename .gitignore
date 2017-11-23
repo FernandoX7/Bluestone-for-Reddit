@@ -33,3 +33,5 @@ $RECYCLE.BIN/
 Thumbs.db
 UserInterfaceState.xcuserstate
 !/src/pages/util/Constants.ts
+
+\.sourcemaps/main\.js\.map

@@ -37,7 +37,8 @@
     "moment": "^2.19.2",
     "rxjs": "5.5.2",
     "sw-toolbox": "3.6.0",
-    "zone.js": "0.8.18"
+    "zone.js": "0.8.18",
+    "cordova-ios": "~4.5.4"
   },
   "devDependencies": {
     "@ionic/app-scripts": "3.1.2",
