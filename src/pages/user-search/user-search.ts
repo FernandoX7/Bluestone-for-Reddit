@@ -9,6 +9,7 @@ import {GetUserService} from "./get-user-service";
 import {ThumbnailImage} from "../popups/thumbnail-image";
 import {HomeItemDetail} from "../home-item-detail/home-item-detail";
 import {SortUserFeedPopover} from "./sort-user-feed-popover";
+import {RedditService} from "../../services/reddit-service";
 
 @Component({
   selector: 'page-user-search',
@@ -18,12 +19,13 @@ import {SortUserFeedPopover} from "./sort-user-feed-popover";
 
 export class UserSearch implements OnInit {
 
-  passedUserName: string;
+  username: string;
   feed: any;
   typeOfPage: string;
   subTypeOfPage: any;
   isThereData: boolean;
   loader: any;
+  user = {};
 
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
@@ -31,21 +33,59 @@ export class UserSearch implements OnInit {
               public modalCtrl: ModalController,
               public popoverCtrl: PopoverController,
               public loadingCtrl: LoadingController,
-              public toastCtrl: ToastController) {
+              public toastCtrl: ToastController,
+              public reddit: RedditService) {
 
-    this.passedUserName = navParams.get('searchValue');
+    this.username = navParams.get('username');
   }
 
   ngOnInit() {
     this.showLoadingPopup('Please wait...');
     this.determineNewsFeedToShow();
+
+    this.reddit.getUserInfo(this.username).then((userInfo) => {
+      this.user = {
+        id: userInfo['id'],
+        commentKarma: userInfo['comment_karma'],
+        createdUTC: userInfo['created_utc'],
+        postKarma: userInfo['link_karma'],
+        name: userInfo['name']
+      };
+    }).catch(err => {
+      console.log('Error getting users info', err);
+    });
+
+    this.reddit.getUserSubmittedPosts(this.username).then((submittedPosts) => {
+      this.user['submittedPosts'] = submittedPosts;
+    }).catch(err => {
+      console.log('Error getting the users submitted posts', err);
+    });
+
+    this.reddit.getUserComments(this.username).then((comments) => {
+      this.user['comments'] = comments;
+    }).catch(err => {
+      console.log('Error getting the users comments', err);
+    });
+
+    this.reddit.getUserOverview(this.username).then((overviewData) => {
+      // Save if it's a user submitted post or a comment
+      _.forEach(overviewData, (item) => {
+        item['contentType'] = item.constructor.name;
+      });
+
+      this.user['overview'] = overviewData;
+    }).catch(err => {
+      console.log('Error getting the users comments', err);
+    });
+
+    /**
     this.data
-      .getUser(this.passedUserName)
+      .getUser(this.username)
       .subscribe(
         data => {
           this.loadFeed(data);
           data = data.data.children;
-          console.log(this.passedUserName, 'data', data);
+          console.log(this.username, 'data', data);
 
           // Check if there is any data at all
           if (data.length < 1) {
@@ -56,16 +96,17 @@ export class UserSearch implements OnInit {
 
         },
         err => {
-          console.error('There was an error retrieving ', this.passedUserName, err);
+          console.error('There was an error retrieving ', this.username, err);
           if (err.statusText === '') {
-            this.presentToast('Error: Failed to retrieve ' + this.passedUserName);
+            this.presentToast('Error: Failed to retrieve ' + this.username);
           } else {
             this.presentToast('Error: ' + err.statusText);
           }
           this.loader.dismissAll();
         },
-        () => console.log('Successfully retrieved', this.passedUserName, ' data')
+        () => console.log('Successfully retrieved', this.username, ' data')
       );
+     **/
 
   }
 
@@ -73,12 +114,12 @@ export class UserSearch implements OnInit {
   loadSubType(subType) {
     this.showLoadingPopup('Please wait...');
     this.data
-      .getUserSorted(this.passedUserName, subType)
+      .getUserSorted(this.username, subType)
       .subscribe(
         data => {
           this.loadFeed(data);
           data = data.data.children;
-          console.log(this.passedUserName, 'data', data);
+          console.log(this.username, 'data', data);
 
           // Check if there is any data at all
           if (data.length < 1) {
@@ -89,15 +130,15 @@ export class UserSearch implements OnInit {
 
         },
         err => {
-          console.error('There was an error retrieving ', this.passedUserName, err);
+          console.error('There was an error retrieving ', this.username, err);
           if (err.statusText === '') {
-            this.presentToast('Error: Failed to retrieve ' + this.passedUserName);
+            this.presentToast('Error: Failed to retrieve ' + this.username);
           } else {
             this.presentToast('Error: ' + err.statusText);
           }
           this.loader.dismissAll();
         },
-        () => console.log('Successfully retrieved', this.passedUserName, ' data')
+        () => console.log('Successfully retrieved', this.username, ' data')
       );
 
   }

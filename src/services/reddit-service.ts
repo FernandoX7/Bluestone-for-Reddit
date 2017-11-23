@@ -85,22 +85,18 @@ export class RedditService implements OnInit {
     });
   }
 
-  getUserOverview(user) {
+  getUserOverview(user, fetchMoreAmount?) {
     return new Promise((resolve, reject) => {
       this.reddit.getUser(user).getOverview().then((overview) => {
-
-        console.log('User overview', overview);
-
+        this.getPostsBoilerPlateCode(overview, fetchMoreAmount, resolve);
       }).catch(error => reject(error));
     });
   }
 
-  getUserComments(user) {
+  getUserComments(user, fetchMoreAmount?) {
     return new Promise((resolve, reject) => {
       this.reddit.getUser(user).getComments().then((comments) => {
-
-        console.log('User comments', comments);
-
+        this.getPostsBoilerPlateCode(comments, fetchMoreAmount, resolve);
       }).catch(error => reject(error));
     });
   }
@@ -109,6 +105,7 @@ export class RedditService implements OnInit {
   getUserUpvotedContent(user) {
     return new Promise((resolve, reject) => {
       this.reddit.getUser(user).getUpvotedContent().then((content) => {
+        resolve(content);
       }).catch(error => reject(error));
     });
   }
@@ -117,16 +114,15 @@ export class RedditService implements OnInit {
   getUserDownvotedContent(user) {
     return new Promise((resolve, reject) => {
       this.reddit.getUser(user).getDownvotedContent().then((content) => {
+        resolve(content);
       }).catch(error => reject(error));
     });
   }
 
-  getUserSubmittedPosts(user) {
+  getUserSubmittedPosts(user, fetchMoreAmount?) {
     return new Promise((resolve, reject) => {
-      this.reddit.getUser(user).getSubmissions().then((posts) => {
-
-        console.log('User submitted posts', posts);
-
+      this.reddit.getUser(user).getSubmissions().then((submittedPosts) => {
+        this.getPostsBoilerPlateCode(submittedPosts, fetchMoreAmount, resolve);
       }).catch(error => reject(error));
     });
   }
@@ -134,9 +130,7 @@ export class RedditService implements OnInit {
   getUserInfo(user) {
     return new Promise((resolve, reject) => {
       this.reddit.getUser(user).fetch().then((info) => {
-
-        console.log('User info', info);
-
+        resolve(info)
       }).catch(error => reject(error));
     });
   }

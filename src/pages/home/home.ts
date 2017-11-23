@@ -281,7 +281,7 @@ export class Home implements OnInit {
             data.title = data.title.trim();
             if (data.title !== '') {
               this.navCtrl.push(UserSearch, {
-                searchValue: data.title
+                username: data.title
               });
             }
           }
