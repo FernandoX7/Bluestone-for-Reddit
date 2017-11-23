@@ -11,21 +11,21 @@ import {ThumbnailImage} from "../popups/thumbnail-image";
 import {SortFeedPopover} from "./sort-feed-popover";
 import {SubredditSearch} from "../subreddit-search/subreddit-search";
 import {UserSearch} from "../user-search/user-search";
+import {RedditService} from "../../services/reddit-service";
 
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html',
   providers: [FeedService]
 })
-export class Home implements OnInit {
 
+export class Home implements OnInit {
   @ViewChild(Content) content: Content;
 
-  feed: any;
+  posts: any;
   typeOfPage: string;
   subTypeOfPage: any;
   loader: any;
-  nextPageCode: string;
 
   constructor(private navCtrl: NavController,
               private data: FeedService,
@@ -33,24 +33,25 @@ export class Home implements OnInit {
               private navParams: NavParams,
               private popoverCtrl: PopoverController,
               private alertCtrl: AlertController,
-              private loadingCtrl: LoadingController) {
+              private loadingCtrl: LoadingController,
+              private reddit: RedditService) {
   }
 
   ngOnInit() {
     this.showLoadingPopup('Please wait...');
     this.determineNewsFeedToShow();
-    // Get news feed
-    this.data
-      .getFeed(this.typeOfPage)
-      .subscribe(
-        data => {
-          this.loadFeed(data, false);
-          this.nextPageCode = data.data.after;
-          data = data.data.children;
-        },
-        err => console.error('There was an error loading the home page news feed', err),
-        () => console.log('Successfully loaded the home page news feed')
-      );
+    this.getFeed();
+  }
+
+  getFeed() {
+    this.reddit.getHotPosts().then((posts) => {
+      this.loadFeed(posts, false);
+    }).catch(err => {
+      console.log('Error getting hot posts', err);
+      this.reddit.getHotPosts().then(posts => {
+        this.posts = posts
+      });
+    });
   }
 
   // Update news feed based on new sub type
@@ -61,7 +62,7 @@ export class Home implements OnInit {
       .getSubTypeFeed(this.typeOfPage, subType)
       .subscribe(
         data => {
-          this.nextPageCode = data.data.after;
+          // this.nextPageCode = data.data.after;
           this.loadFeed(data, false);
           data = data.data.children;
         },
@@ -167,70 +168,68 @@ export class Home implements OnInit {
 
   /**
    * Handles loading the news feed
-   * @param data - JSON data returned from the service
+   * @param posts - Returned from the service
    * @param isLoadingMoreData - Used for when scrolling down and loading data
    */
-  loadFeed(data, isLoadingMoreData: boolean) {
-    // Feed loaded - dismiss loading popup
+  loadFeed(posts, isLoadingMoreData: boolean) {
     this.loader.dismissAll();
+    this.posts = posts;
+    this.addHigherQualityThumbnails();
+  }
 
-    data = data.data.children;
-    if(!isLoadingMoreData) {
-      this.feed = data;
-    }
+  addHigherQualityThumbnails() {
+    _.forEach(this.posts, (post) => {
+      // Set hours posted ago
+      post['hoursAgo'] = this.getHoursAgo(post.created_utc);
 
-    // Add higher quality thumbnails
-    for (var i = 0; i < data.length; i++) {
-
-      // Add the next page of data to the feed
-      if(isLoadingMoreData) {
-        this.feed.push(data[i]);
-      }
-
-      // Get hours posted ago
-      this.feed[i].data['hoursAgo'] = this.getHoursAgo(this.feed[i].data.created_utc);
-
-      // If there's no .preview property - it's an all text post
-      if (typeof data[i].data.preview !== 'undefined') {
+      // If there's no preview property - it's an all text post
+      if (post.hasOwnProperty('preview')) {
         // Iterate through the resolutions array to find the highest resolution for that picture
         let maximumResolution = 10;
-        let selectedItemsResolutions = data[i].data.preview.images[0].resolutions;
+        let allImageResolutions = post.preview.images[0].resolutions;
 
         // Check if it's a gif
-        if (typeof data[i].data.preview.images[0].variants.gif !== 'undefined') {
-          selectedItemsResolutions = data[i].data.preview.images[0].variants.gif.resolutions;
-
-          while (maximumResolution > 0) {
-            if (typeof selectedItemsResolutions[maximumResolution] === 'undefined') {
-              maximumResolution--;
-            } else {
-              // Make the url actually point to the image and add it as a property to the object
-              let thumbnailImageUrl = selectedItemsResolutions[maximumResolution].url;
-              thumbnailImageUrl = _.replace(thumbnailImageUrl, new RegExp('&amp;', 'g'), '&');
-              data[i].data['gifImage'] = thumbnailImageUrl;
-              break;
+        if (post.url.substr(post.url.length - 4) === 'gifv') {
+          if (post.preview.images[0].variants.gif) {
+            allImageResolutions = post.preview.images[0].variants.gif.resolutions;
+          } else {
+            allImageResolutions = {
+              noResolutions: true,
+              url: post.url
             }
           }
 
+          if (allImageResolutions.noResolutions !== true) {
+            while (maximumResolution > 0) {
+              if (_.isNil(allImageResolutions[maximumResolution])) {
+                maximumResolution--; // GET OUT OF LOOP! :O
+              } else {
+                // Make the url actually point to an image and add it as a property to the object
+                let thumbnailImageUrl = allImageResolutions[maximumResolution].url;
+                thumbnailImageUrl = _.replace(thumbnailImageUrl, new RegExp('&amp;', 'g'), '&'); // Replace & with &amp;
+                post['gifImage'] = thumbnailImageUrl;
+                break;
+              }
+            }
+          }
         }
 
-        // Reset variable back to normal images not gifs
-        selectedItemsResolutions = data[i].data.preview.images[0].resolutions;
+        // Reset variable back to normal images and not gifs
+        allImageResolutions = post.preview.images[0].resolutions;
 
         while (maximumResolution > 0) {
-          if (typeof selectedItemsResolutions[maximumResolution] === 'undefined') {
+          if (_.isNil(allImageResolutions[maximumResolution])) {
             maximumResolution--;
           } else {
             // Make the url actually point to the image and add it as a property to the object
-            let thumbnailImageUrl = selectedItemsResolutions[maximumResolution].url;
+            let thumbnailImageUrl = allImageResolutions[maximumResolution].url;
             thumbnailImageUrl = _.replace(thumbnailImageUrl, new RegExp('&amp;', 'g'), '&');
-            data[i].data['thumbnailImage'] = thumbnailImageUrl;
+            post['thumbnailImage'] = thumbnailImageUrl;
             break;
           }
         }
       }
-    }
-
+    });
   }
 
   showLoadingPopup(message) {
@@ -252,37 +251,37 @@ export class Home implements OnInit {
   }
 
   loadMoreData(infiniteScroll) {
-    console.log('Begin loading more data async', this.subTypeOfPage);
-
-    if (this.subTypeOfPage !== 'Hot') {
-      setTimeout(() => {
-        this.data
-          .getMoreSubTypeFeed(this.typeOfPage, this.subTypeOfPage, this.nextPageCode)
-          .subscribe(
-            data => {
-              this.loadFeed(data, true);
-              this.nextPageCode = data.data.after;
-            },
-            err => console.error('There was an error loading the home page news feed for subtype ', this.subTypeOfPage, err),
-            () => console.log('Successfully loaded the home page news feed')
-          );
-        infiniteScroll.complete();
-      }, 500);
-    } else {
-      setTimeout(() => {
-        this.data
-          .getMoreFeed(this.typeOfPage, this.nextPageCode)
-          .subscribe(
-            data => {
-              this.loadFeed(data, true);
-              this.nextPageCode = data.data.after;
-            },
-            err => console.error('There was an error loading the home page news feed for subtype ', this.subTypeOfPage, err),
-            () => console.log('Successfully loaded the home page news feed')
-          );
-        infiniteScroll.complete();
-      }, 500);
-    }
+    // console.log('Begin loading more data async', this.subTypeOfPage);
+    //
+    // if (this.subTypeOfPage !== 'Hot') {
+    //   setTimeout(() => {
+    //     this.data
+    //       .getMoreSubTypeFeed(this.typeOfPage, this.subTypeOfPage, this.nextPageCode)
+    //       .subscribe(
+    //         data => {
+    //           this.loadFeed(data, true);
+    //           this.nextPageCode = data.data.after;
+    //         },
+    //         err => console.error('There was an error loading the home page news feed for subtype ', this.subTypeOfPage, err),
+    //         () => console.log('Successfully loaded the home page news feed')
+    //       );
+    //     infiniteScroll.complete();
+    //   }, 500);
+    // } else {
+    //   setTimeout(() => {
+    //     this.data
+    //       .getMoreFeed(this.typeOfPage, this.nextPageCode)
+    //       .subscribe(
+    //         data => {
+    //           this.loadFeed(data, true);
+    //           this.nextPageCode = data.data.after;
+    //         },
+    //         err => console.error('There was an error loading the home page news feed for subtype ', this.subTypeOfPage, err),
+    //         () => console.log('Successfully loaded the home page news feed')
+    //       );
+    //     infiniteScroll.complete();
+    //   }, 500);
+    // }
 
   }
 
