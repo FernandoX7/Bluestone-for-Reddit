@@ -13,7 +13,9 @@ export class CommentsList {
   }
 
   toggleExpanded(comment) {
-    comment.expanded = !comment.expanded;
+    if (comment.replies.length > 0) {
+      comment.expanded = !comment.expanded;
+    }
   }
 
   trackByCommentId(index, comment) {

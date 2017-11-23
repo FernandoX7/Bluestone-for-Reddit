@@ -26,17 +26,18 @@
       float: right;
     }
 
+    .comment-dropdown-icon {
+      position: relative;
+      bottom: 9px;
+      right: 8px;
+      float: right;
+      font-size: 1.6em;
+    }
+
     .comment-time-ago {
       font-size: 1.3rem;
       color: #a0a2a7;
       float: right;
-    }
-
-    .comment-amount {
-      background-color: #42a5f5;
-      color: white;
-      float: right;
-      margin-right: 5px;
     }
 
     .comment-body {
@@ -47,19 +48,6 @@
     ion-label {
       margin-bottom: 5px;
       margin-top: 5px;
-    }
-  }
-
-  .replies-toggle {
-    background-color: #42a5f5;
-    margin-top: 10px;
-    color: #ededed;
-    position: relative;
-    left: -6px;
-
-    ion-icon {
-      position: relative;
-      margin-left: 5px;
     }
   }
 

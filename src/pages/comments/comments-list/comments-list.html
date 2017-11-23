@@ -4,18 +4,20 @@
       <span class="comment-author">{{comment.author}}</span>
       <span class="comment-score">&nbsp;{{comment.score}}</span>
       <span class="comment-time-ago">{{(comment.created_utc | amFromUnix) | amTimeAgo:true}} &sdot;</span>
+      <span class="comment-dropdown-icon"
+            *ngIf="!comment.expanded && comment.replies.length > 0">
+        <ion-icon name="md-arrow-dropdown"></ion-icon>
+      </span>
+      <span class="comment-dropdown-icon"
+            *ngIf="comment.expanded">
+        <ion-icon name="md-arrow-dropup"></ion-icon>
+      </span>
     </p>
-    <p class="comment-body">{{comment.body}}</p>
-    <button
-      *ngIf="comment.replies.length"
-      (click)="toggleExpanded(comment)"
-      ion-button clear
-      class="replies-toggle">
-      <span class="comment-amount">{{comment.replies.length}}</span>
-      <ion-icon name="ios-arrow-down" *ngIf="comment.expanded"></ion-icon>
-      <ion-icon name="ios-arrow-forward" *ngIf="!comment.expanded"></ion-icon>
-    </button>
+
+    <p class="comment-body" (click)="toggleExpanded(comment)">{{comment.body}}</p>
+
     <comments-list *ngIf="comment.replies.length && comment.expanded" [comments]="comment.replies"></comments-list>
+
     <div class="line-seperator"></div>
   </ion-item>
 </ion-list>
