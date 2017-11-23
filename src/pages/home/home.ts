@@ -5,7 +5,6 @@ import {
   NavController, ModalController, NavParams, PopoverController, AlertController,
   LoadingController, Content
 } from 'ionic-angular';
-import {FeedService} from "./feed-service";
 import {HomeItemDetail} from "../home-item-detail/home-item-detail";
 import {ThumbnailImage} from "../popups/thumbnail-image";
 import {SortFeedPopover} from "./sort-feed-popover";
@@ -16,7 +15,7 @@ import {RedditService} from "../../services/reddit-service";
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html',
-  providers: [FeedService]
+  providers: []
 })
 
 export class Home implements OnInit {
@@ -29,7 +28,6 @@ export class Home implements OnInit {
   amountOfMoreData = 0;
 
   constructor(private navCtrl: NavController,
-              private data: FeedService,
               private modalCtrl: ModalController,
               private navParams: NavParams,
               private popoverCtrl: PopoverController,

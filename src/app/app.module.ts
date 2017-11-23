@@ -3,7 +3,6 @@ import {IonicApp, IonicModule} from 'ionic-angular';
 import {MyApp} from './app.component';
 import {Home} from '../pages/home/home';
 import {HomeItemDetail} from '../pages/home-item-detail/home-item-detail';
-import {FeedService} from "../pages/home/feed-service";
 import {ThumbnailImage} from "../pages/popups/thumbnail-image";
 import {SubredditSearch} from "../pages/subreddit-search/subreddit-search";
 import {GetSubredditService} from "../pages/subreddit-search/get-subreddit-service";
@@ -54,7 +53,6 @@ import {ZoomPanDirective} from "../directives/zoom-pan";
     SortSearchedSubredditPopover
   ],
   providers: [
-    FeedService,
     Constants,
     GetSubredditService,
     StatusBar,
