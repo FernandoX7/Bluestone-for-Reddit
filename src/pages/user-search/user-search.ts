@@ -26,6 +26,7 @@ export class UserSearch implements OnInit {
   isThereData: boolean;
   loader: any;
   user = {};
+  posts: any;
 
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
@@ -42,108 +43,64 @@ export class UserSearch implements OnInit {
   ngOnInit() {
     this.showLoadingPopup('Please wait...');
     this.determineNewsFeedToShow();
-    this.setupUser();
-
-    /**
-    this.data
-      .getUser(this.username)
-      .subscribe(
-        data => {
-          this.loadFeed(data);
-          data = data.data.children;
-          console.log(this.username, 'data', data);
-
-          // Check if there is any data at all
-          if (data.length < 1) {
-            this.isThereData = false;
-          } else {
-            this.isThereData = true;
-          }
-
-        },
-        err => {
-          console.error('There was an error retrieving ', this.username, err);
-          if (err.statusText === '') {
-            this.presentToast('Error: Failed to retrieve ' + this.username);
-          } else {
-            this.presentToast('Error: ' + err.statusText);
-          }
-          this.loader.dismissAll();
-        },
-        () => console.log('Successfully retrieved', this.username, ' data')
-      );
-     **/
-
+    this.setupUser().then(user => {
+      console.log('user', user);
+      this.posts = user['overview'];
+    })
   }
 
   setupUser() {
-    this.reddit.getUserInfo(this.username).then((userInfo) => {
-      this.user = {
-        id: userInfo['id'],
-        commentKarma: userInfo['comment_karma'],
-        createdUTC: userInfo['created_utc'],
-        postKarma: userInfo['link_karma'],
-        name: userInfo['name']
-      };
-    }).catch(err => {
-      console.log('Error getting users info', err);
-    });
+    return new Promise((resolve, reject) => {
+      this.reddit.getUserInfo(this.username).then((userInfo) => {
+        this.user = {
+          id: userInfo['id'],
+          commentKarma: userInfo['comment_karma'],
+          createdUTC: userInfo['created_utc'],
+          postKarma: userInfo['link_karma'],
+          name: userInfo['name']
+        };
 
-    this.reddit.getUserSubmittedPosts(this.username).then((submittedPosts) => {
-      this.user['submittedPosts'] = submittedPosts;
-    }).catch(err => {
-      console.log('Error getting the users submitted posts', err);
-    });
+        this.reddit.getUserSubmittedPosts(this.username).then((submittedPosts) => {
+          this.user['submittedPosts'] = submittedPosts;
 
-    this.reddit.getUserComments(this.username).then((comments) => {
-      this.user['comments'] = comments;
-    }).catch(err => {
-      console.log('Error getting the users comments', err);
-    });
+          this.reddit.getUserComments(this.username).then((comments) => {
+            this.user['comments'] = comments;
 
-    this.reddit.getUserOverview(this.username).then((overviewData) => {
-      // Save if it's a user submitted post or a comment
-      _.forEach(overviewData, (item) => {
-        item['contentType'] = item.constructor.name;
+            this.reddit.getUserOverview(this.username).then((overviewData) => {
+              // Save if it's a user submitted post or a comment
+              _.forEach(overviewData, (item) => {
+                item['contentType'] = item.constructor.name;
+              });
+
+              this.user['overview'] = overviewData;
+
+              resolve(this.user);
+            }).catch(err => {
+              console.log('Error getting the users comments', err);
+              reject(err);
+            });
+
+          }).catch(err => {
+            console.log('Error getting the users comments', err);
+            reject(err);
+          });
+
+        }).catch(err => {
+          console.log('Error getting the users submitted posts', err);
+          reject(err);
+        });
+
+      }).catch(err => {
+        console.log('Error getting users info', err);
+        reject(err);
       });
-
-      this.user['overview'] = overviewData;
-    }).catch(err => {
-      console.log('Error getting the users comments', err);
     });
   }
 
   // Update news feed based on new sub type
   loadSubType(subType) {
     this.showLoadingPopup('Please wait...');
-    this.data
-      .getUserSorted(this.username, subType)
-      .subscribe(
-        data => {
-          this.loadFeed(data);
-          data = data.data.children;
-          console.log(this.username, 'data', data);
-
-          // Check if there is any data at all
-          if (data.length < 1) {
-            this.isThereData = false;
-          } else {
-            this.isThereData = true;
-          }
-
-        },
-        err => {
-          console.error('There was an error retrieving ', this.username, err);
-          if (err.statusText === '') {
-            this.presentToast('Error: Failed to retrieve ' + this.username);
-          } else {
-            this.presentToast('Error: ' + err.statusText);
-          }
-          this.loader.dismissAll();
-        },
-        () => console.log('Successfully retrieved', this.username, ' data')
-      );
-
+    console.log('subType', subType);
   }
 
   goToItemDetail(item) {
