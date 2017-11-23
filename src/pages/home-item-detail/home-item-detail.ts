@@ -17,7 +17,6 @@ export class HomeItemDetail implements OnInit {
 
   constructor(public navParams: NavParams, private commentsService: CommentsService) {
     this.post = navParams.get('feedPost');
-    console.log('this.post', this.post);
   }
 
   ngOnInit() {
