@@ -85,4 +85,60 @@ export class RedditService implements OnInit {
     });
   }
 
+  getUserOverview(user) {
+    return new Promise((resolve, reject) => {
+      this.reddit.getUser(user).getOverview().then((overview) => {
+
+        console.log('User overview', overview);
+
+      }).catch(error => reject(error));
+    });
+  }
+
+  getUserComments(user) {
+    return new Promise((resolve, reject) => {
+      this.reddit.getUser(user).getComments().then((comments) => {
+
+        console.log('User comments', comments);
+
+      }).catch(error => reject(error));
+    });
+  }
+
+  // API key and user you are searching for must match or this will fail
+  getUserUpvotedContent(user) {
+    return new Promise((resolve, reject) => {
+      this.reddit.getUser(user).getUpvotedContent().then((content) => {
+      }).catch(error => reject(error));
+    });
+  }
+
+  // API key and user you are searching for must match or this will fail
+  getUserDownvotedContent(user) {
+    return new Promise((resolve, reject) => {
+      this.reddit.getUser(user).getDownvotedContent().then((content) => {
+      }).catch(error => reject(error));
+    });
+  }
+
+  getUserSubmittedPosts(user) {
+    return new Promise((resolve, reject) => {
+      this.reddit.getUser(user).getSubmissions().then((posts) => {
+
+        console.log('User submitted posts', posts);
+
+      }).catch(error => reject(error));
+    });
+  }
+
+  getUserInfo(user) {
+    return new Promise((resolve, reject) => {
+      this.reddit.getUser(user).fetch().then((info) => {
+
+        console.log('User info', info);
+
+      }).catch(error => reject(error));
+    });
+  }
+
 }
