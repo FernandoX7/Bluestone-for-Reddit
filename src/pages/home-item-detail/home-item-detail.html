@@ -3,68 +3,51 @@
     <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
-    <ion-title>{{selectedItem.data.title}}</ion-title>
+    <ion-title>{{post.title}}</ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content class="background">
-
-  <ion-card class="card-detail-view" *ngIf="selectedItem.data.thumbnail !== 'default' && selectedItem.data.thumbnail !== 'self' || selectedItem.data.hasOwnProperty('thumbnailImage')">
-  <img class="header-image" src="{{selectedItem.data.headerImage}}">
+  <ion-card class="card-detail-view" *ngIf="hasThumbnail(post)">
+    <img class="header-image" src="{{post.thumbnailImage}}">
   </ion-card>
 
   <ion-row>
-    <ion-col padding>
-      <div class="title">{{selectedItem.data.title}}</div>
-      <span class="subreddit">{{selectedItem.data.subreddit}}</span>
-      <span *ngIf="selectedItem.data.link_flair_text !== null && selectedItem.data.link_flair_text !== ''" class="bullet">&sdot;</span>
-      <span *ngIf="selectedItem.data.link_flair_text !== null && selectedItem.data.link_flair_text !== ''" class="link-flair">{{selectedItem.data.link_flair_text}}</span>
-      <span class="bullet">&sdot;</span>
-      <span class="url">{{selectedItem.data.domain}}</span>
-      <span class="bullet">&sdot;</span>
-      <span class="posted-time">{{selectedItem.data.hoursAgo}}</span>
+    <ion-col class="info-column">
+      <span class="post-title">{{post.title}}</span>
       <br/>
-      <span class="upvotes">{{selectedItem.data.ups}}</span>
+      <span class="subreddit">{{post.subreddit.display_name}}</span>
+      <span *ngIf="hasLinkFlair(post.link_flair_text)" class="bullet">&sdot;</span>
+      <span *ngIf="hasLinkFlair(post.link_flair_text)" class="link-flair">{{post.link_flair_text}}</span>
       <span class="bullet">&sdot;</span>
-      <span class="comments">{{selectedItem.data.num_comments}} comments</span>
-      <span class="gilded" *ngIf="selectedItem.data.gilded > 0">&nbsp;x{{selectedItem.data.gilded}}</span>
+      <span class="url">{{post.domain}}</span>
+      <span class="bullet">&sdot;</span>
+      <span class="posted-time">{{post.hoursAgo}}</span>
+      <br/>
+      <span class="upvotes">
+            <ion-icon name="arrow-up" class="comments-icon"></ion-icon>
+          </span>
+      <span class="upvotes">{{formatToThousand(post.ups)}}
+          </span>
+      <span class="bullet">&sdot;</span>
+      <span class="comments">
+            <ion-icon name="chatbubbles" class="comments-icon"></ion-icon>
+          </span>
+      <span class="comments">{{formatToThousand(post.num_comments)}}</span>
+      <span class="bullet" *ngIf="postIsGilded(post.gilded)">&sdot;</span>
+      <span class="gilded" *ngIf="postIsGilded(post.gilded)">x{{post.gilded}}</span>
     </ion-col>
   </ion-row>
 
-  <ion-row *ngIf="selectedItem.data.selftext !== ''">
+  <ion-row *ngIf="hasSelfText(post.selftext)">
     <ion-col padding class="selftext-background">
-      <div class="post-creator-username">{{selectedItem.data.author}}</div>
-      <div [innerHTML]="selectedItem.data.selftext_html_parsed" class="selftext"></div>
+      <div class="post-creator-username">{{post.author.name}}</div>
+      <div [innerHTML]="post.selftext_html_parsed" class="selftext"></div>
     </ion-col>
   </ion-row>
-
-  <!--TODO: Actions - maybe-->
-  <!--<ion-row>-->
-    <!--<ion-col padding>-->
-      <!--<button ion-button icon-only>-->
-        <!--<ion-icon name="home"></ion-icon>-->
-      <!--</button>-->
-    <!--</ion-col>-->
-    <!--<ion-col padding>-->
-      <!--<button ion-button icon-only>-->
-        <!--<ion-icon name="home"></ion-icon>-->
-      <!--</button>-->
-    <!--</ion-col>-->
-    <!--<ion-col padding>-->
-      <!--<button ion-button icon-only>-->
-        <!--<ion-icon name="home"></ion-icon>-->
-      <!--</button>-->
-    <!--</ion-col>-->
-    <!--<ion-col padding>-->
-      <!--<button ion-button icon-only>-->
-        <!--<ion-icon name="home"></ion-icon>-->
-      <!--</button>-->
-    <!--</ion-col>-->
-  <!--</ion-row>-->
 
   <div class="seperator"></div>
-  <div class="loading-bar" *ngIf="!loadCompleted"></div>
+  <div class="loading-bar" *ngIf="!loadedComments"></div>
 
   <comments-list [comments]="comments"></comments-list>
-
 </ion-content>
