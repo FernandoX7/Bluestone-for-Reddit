@@ -9,7 +9,7 @@
         <ion-col class="toolbar-title-column">
           <ion-title>
             {{typeOfPage}}
-            <div style="font-size: 1.35rem" >
+            <div class="sub-type">
               {{subTypeOfPage}}
             </div>
           </ion-title>
@@ -33,34 +33,44 @@
 
 <ion-content class="background">
 
-  <ion-fab right bottom>
-    <button ion-fab class="search-fab" (tap)="showSearchPrompt()"><ion-icon name="search"></ion-icon></button>
+  <ion-fab right bottom class="search-fab">
+    <button ion-fab (tap)="showSearchPrompt()">
+      <ion-icon name="search"></ion-icon>
+    </button>
   </ion-fab>
 
   <ion-list>
 
-    <ion-card class="card" *ngFor="let feedItem of feed">
+    <ion-card class="card" *ngFor="let post of posts">
       <ion-row>
-        <ion-col padding (tap)="goToItemDetail(feedItem)">
-          <span class="title">{{feedItem.data.title | slice: 0: (feedItem.data.thumbnail !== 'default' && feedItem.data.thumbnail !== 'self' ? 35 : 95) }}</span><span *ngIf="feedItem.data.title.length > 35" class="title">...</span>
+        <ion-col (tap)="goToItemDetail(post)" class="info-column">
+          <span class="title">{{truncateTitle(post)}}</span>
           <br/>
-          <span class="subreddit">{{feedItem.data.subreddit}}</span>
-          <span *ngIf="feedItem.data.link_flair_text !== null && feedItem.data.link_flair_text !== ''" class="bullet">&sdot;</span>
-          <span *ngIf="feedItem.data.link_flair_text !== null && feedItem.data.link_flair_text !== ''" class="link-flair">{{feedItem.data.link_flair_text}}</span>
+          <span class="subreddit">{{post.subreddit.display_name}}</span>
+          <span *ngIf="hasLinkFlair(post.link_flair_text)" class="bullet">&sdot;</span>
+          <span *ngIf="hasLinkFlair(post.link_flair_text)" class="link-flair">{{post.link_flair_text}}</span>
           <span class="bullet">&sdot;</span>
-          <span class="url">{{feedItem.data.domain}}</span>
+          <span class="url">{{post.domain}}</span>
           <span class="bullet">&sdot;</span>
-          <span class="posted-time">{{feedItem.data.hoursAgo}}</span>
+          <span class="posted-time">{{post.hoursAgo}}</span>
           <br/>
-          <span class="upvotes">{{feedItem.data.ups}}</span>
+          <span class="upvotes">
+            <ion-icon name="arrow-up" class="comments-icon"></ion-icon>
+          </span>
+          <span class="upvotes">{{formatToThousand(post.ups)}}
+          </span>
           <span class="bullet">&sdot;</span>
-          <span class="comments">{{feedItem.data.num_comments}} comments</span>
-          <span class="gilded" *ngIf="feedItem.data.gilded > 0">&nbsp;x{{feedItem.data.gilded}}</span>
+          <span class="comments">
+            <ion-icon name="chatbubbles" class="comments-icon"></ion-icon>
+          </span>
+          <span class="comments">{{formatToThousand(post.num_comments)}}</span>
+          <span class="bullet" *ngIf="postIsGilded(post.gilded)">&sdot;</span>
+          <span class="gilded" *ngIf="postIsGilded(post.gilded)">x{{post.gilded}}</span>
         </ion-col>
-        <ion-col [ngStyle]="{'background-image': 'url(' + feedItem.data.thumbnailImage + ')'}"
+        <ion-col [ngStyle]="{'background-image': 'url(' + post.thumbnailImage + ')'}"
                  class="thumbnail-column"
-                 *ngIf="feedItem.data.thumbnail !== 'default' && feedItem.data.thumbnail !== 'self'" width-33
-                 (tap)="openImage(feedItem)">
+                 *ngIf="hasThumbnail(post)"
+                 (tap)="openImage(post)">
         </ion-col>
       </ion-row>
     </ion-card>
@@ -70,5 +80,4 @@
     </ion-infinite-scroll>
 
   </ion-list>
-
 </ion-content>

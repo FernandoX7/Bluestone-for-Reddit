@@ -285,4 +285,35 @@ export class Home implements OnInit {
 
   }
 
+  truncateTitle(post) {
+    let title = '';
+    if (post.thumbnail !== 'default' && post.thumbnail !== 'self') {
+      title = post.title.substring(0, 35);
+    } else {
+      title = post.title.substring(0, 70);
+    }
+
+    if (title.length >= 35) {
+      return title + '...';
+    } else {
+      return title;
+    }
+  }
+
+  hasLinkFlair(linkFlair) {
+    return !_.isNil(linkFlair) && linkFlair !== ''
+  }
+
+  // Adds K to a number if greaters then 999 - Ex: 4.5K
+  formatToThousand(votes) {
+    return votes > 999 ? (votes / 1000).toFixed(1) + 'K' : votes;
+  }
+
+  postIsGilded(gildedAmount) {
+    return gildedAmount > 0;
+  }
+
+  hasThumbnail(post) {
+    return post.thumbnailImage;
+  }
 }

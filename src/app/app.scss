@@ -52,15 +52,25 @@
 }
 
 .thumbnail-column {
-  -webkit-background-size: cover;
   background-size: cover;
   background-position: center;
+  background-repeat: no-repeat;
+  width: 100px;
+  max-width:100px;
+}
+
+.info-column {
+  padding: 15px;
 }
 
 .thumbnail {
   display: inline-block;
   height: 100%;
   max-height: 165px;
+}
+
+.sub-type {
+  font-size: 1.35rem;
 }
 
 .title {
@@ -82,7 +92,6 @@
 
 .upvotes {
   color: #a0a2a7;
-  font-weight: 600;
   font-size: 1.60rem;
 }
 
@@ -91,8 +100,17 @@
   font-size: 1.60rem;
 }
 
+.comments-icon {
+  position: relative;
+  top: 1px;
+  font-size: 1.60rem;
+}
+
 .link-flair {
+  background-color: #444444;
   color: #a0a2a7;
+  border-radius: 25px;
+  padding: 0 5px;
 }
 
 .gilded {
