@@ -281,13 +281,17 @@ export class UserSearch implements OnInit {
       } else {
         this.posts = newPosts;
       }
-    });
 
-    this.addHigherQualityThumbnails();
+      this.addHigherQualityThumbnails(newPosts);
+    });
   }
 
-  addHigherQualityThumbnails() {
-    _.forEach(this.posts, (post) => {
+  addHigherQualityThumbnails(posts?) {
+    if (_.isNil(posts)) {
+      posts = this.posts;
+    }
+
+    _.forEach(posts, (post) => {
       // Set hours posted ago
       post['hoursAgo'] = this.getHoursAgo(post.created_utc);
 
