@@ -135,4 +135,12 @@ export class RedditService implements OnInit {
     });
   }
 
+  getUserGildedContent(user, fetchMoreAmount?) {
+    return new Promise((resolve, reject) => {
+      this.reddit.getUser(user).getGildedContent().then((gildedContent) => {
+        this.getPostsBoilerPlateCode(gildedContent, fetchMoreAmount, resolve);
+      }).catch(error => reject(error));
+    });
+  }
+
 }

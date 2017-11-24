@@ -406,11 +406,20 @@ export class UserSearch implements OnInit {
   }
 
   getGildedPosts(user) {
-
+    this.reddit.getUserGildedContent(user).then((gildedPosts) => {
+      this.loadFeed(gildedPosts, false);
+    }).catch(err => {
+      console.log('Error getting users gilded posts', err);
+    });
   }
 
   getMoreGildedPosts(infiniteScroll, user) {
-    // TODO:
+    this.reddit.getUserGildedContent(user, this.amountOfMoreData).then((gildedPosts) => {
+      this.loadFeed(gildedPosts, true);
+      infiniteScroll.complete();
+    }).catch(err => {
+      console.log('Error getting more of the users gilded posts', err);
+    });
   }
 
 }
