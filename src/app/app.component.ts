@@ -65,7 +65,7 @@ export class MyApp {
             data.title = data.title.trim();
             if (data.title !== '') {
               this.nav.push(UserSearch, {
-                searchValue: data.title
+                username: data.title
               });
             }
           }
