@@ -1,7 +1,7 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {
   NavController, NavParams, ModalController, PopoverController, LoadingController,
-  ToastController
+  ToastController, Content
 } from 'ionic-angular';
 import * as _ from 'lodash';
 import * as moment from 'moment';
@@ -18,14 +18,14 @@ import {RedditService} from "../../services/reddit-service";
 })
 
 export class UserSearch implements OnInit {
+  @ViewChild(Content) content: Content;
 
   username: string;
-  feed: any;
-  typeOfPage: string;
   subTypeOfPage: any;
   loader: any;
   user = {};
   posts: any;
+  amountOfMoreData = 0;
 
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
@@ -41,9 +41,8 @@ export class UserSearch implements OnInit {
 
   ngOnInit() {
     this.showLoadingPopup('Please wait...');
-    this.determineNewsFeedToShow();
+    this.subTypeOfPage = 'Overview'; // Default
     this.setupUser().then(user => {
-      console.log('user', user);
       this.posts = user['overview'];
     })
   }
@@ -67,13 +66,12 @@ export class UserSearch implements OnInit {
 
             this.reddit.getUserOverview(this.username).then((overviewData) => {
               // Save if it's a user submitted post or a comment
-              _.forEach(overviewData, (item) => {
-                item['contentType'] = item.constructor.name;
+              this.addContentType(overviewData).then(posts => {
+                overviewData = posts;
+                this.user['overview'] = overviewData;
+
+                resolve(this.user);
               });
-
-              this.user['overview'] = overviewData;
-
-              resolve(this.user);
             }).catch(err => {
               console.log('Error getting the users comments', err);
               reject(err);
@@ -96,10 +94,34 @@ export class UserSearch implements OnInit {
     });
   }
 
+  addContentType(posts) {
+    return new Promise(resolve => {
+      _.forEach(posts, (post) => {
+        post['contentType'] = post.constructor.name;
+      });
+      resolve(posts);
+    });
+  }
+
   // Update news feed based on new sub type
   loadSubType(subType) {
     this.showLoadingPopup('Please wait...');
-    console.log('subType', subType);
+    this.content.scrollToTop();
+
+    switch (subType) {
+      case 'Overview':
+        this.getOverviewPosts(this.user['name']);
+        break;
+      case 'Comments':
+        this.getCommentPosts(this.user['name']);
+        break;
+      case 'Submitted':
+        this.getSubmittedPosts(this.user['name']);
+        break;
+      case 'Gilded':
+        this.getGildedPosts(this.user['name']);
+        break;
+    }
   }
 
   goToItemDetail(item) {
@@ -125,7 +147,6 @@ export class UserSearch implements OnInit {
 
   openSortingPopover(myEvent) {
     let popover = this.popoverCtrl.create(SortUserFeedPopover, {
-      typeOfPage: this.typeOfPage,
       subCategory: this.subTypeOfPage
     });
 
@@ -155,11 +176,6 @@ export class UserSearch implements OnInit {
       duration: 3000
     });
     this.loader.present();
-  }
-
-  determineNewsFeedToShow() {
-    this.typeOfPage = this.navParams.get('typeOfPage');
-    this.subTypeOfPage = 'Overview'; // Default
   }
 
   truncateTitle(post) {
@@ -206,12 +222,6 @@ export class UserSearch implements OnInit {
     return post.thumbnailImage;
   }
 
-  decodeHtml(html) {
-    let txt = document.createElement("textarea");
-    txt.innerHTML = html;
-    return txt.value;
-  }
-
   isUserSubmittedPost(contentType) {
     return contentType === 'Submission';
   }
@@ -220,7 +230,7 @@ export class UserSearch implements OnInit {
     return contentType === 'Comment';
   }
 
-  private getHoursAgo(created_utc: any) {
+  getHoursAgo(created_utc: any) {
     var currentTime = moment();
     var createdAt = moment.unix(created_utc);
     var hoursAgo = currentTime.diff(createdAt, 'hours');
@@ -233,6 +243,170 @@ export class UserSearch implements OnInit {
       var yearsAgo = currentTime.diff(createdAt, 'years');
       return yearsAgo + 'y';
     }
+  }
+
+  loadMoreData(infiniteScroll) {
+    this.amountOfMoreData = this.amountOfMoreData + 25;
+
+    switch (this.subTypeOfPage) {
+      case 'Overview':
+        setTimeout(() => {
+          this.getMoreOverviewPosts(infiniteScroll, this.username);
+        }, 500);
+        break;
+      case 'Comments':
+        setTimeout(() => {
+          this.getMoreCommentPosts(infiniteScroll, this.username);
+        }, 500);
+        break;
+      case 'Submitted':
+        setTimeout(() => {
+          this.getMoreSubmittedPosts(infiniteScroll, this.username);
+        }, 500);
+        break;
+      case 'Gilded':
+        setTimeout(() => {
+          this.getMoreGildedPosts(infiniteScroll, this.username);
+        }, 500);
+        break;
+    }
+  }
+
+  loadFeed(posts, isLoadingMoreData: boolean) {
+    this.loader.dismissAll();
+
+    this.addContentType(posts).then(newPosts => {
+      if (isLoadingMoreData) {
+        this.posts = this.posts.concat(newPosts);
+      } else {
+        this.posts = newPosts;
+      }
+    });
+
+    this.addHigherQualityThumbnails();
+  }
+
+  addHigherQualityThumbnails() {
+    _.forEach(this.posts, (post) => {
+      // Set hours posted ago
+      post['hoursAgo'] = this.getHoursAgo(post.created_utc);
+
+      // If there's no preview property - it's an all text post
+      if (post.hasOwnProperty('preview')) {
+        // Iterate through the resolutions array to find the highest resolution for that picture
+        let maximumResolution = 10;
+        let allImageResolutions = post.preview.images[0].resolutions;
+
+        // Check if it's a gif
+        if (post.url.substr(post.url.length - 4) === 'gifv') {
+          if (post.preview.images[0].variants.gif) {
+            allImageResolutions = post.preview.images[0].variants.gif.resolutions;
+          } else {
+            allImageResolutions = {
+              noResolutions: true,
+              url: post.url
+            }
+          }
+
+          if (allImageResolutions.noResolutions !== true) {
+            while (maximumResolution > 0) {
+              if (_.isNil(allImageResolutions[maximumResolution])) {
+                maximumResolution--; // GET OUT OF LOOP! :O
+              } else {
+                // Make the url actually point to an image and add it as a property to the object
+                let thumbnailImageUrl = allImageResolutions[maximumResolution].url;
+                thumbnailImageUrl = _.replace(thumbnailImageUrl, new RegExp('&amp;', 'g'), '&'); // Replace & with &amp;
+                post['gifImage'] = thumbnailImageUrl;
+                break;
+              }
+            }
+          }
+        }
+
+        // Reset variable back to normal images and not gifs
+        allImageResolutions = post.preview.images[0].resolutions;
+
+        while (maximumResolution > 0) {
+          if (_.isNil(allImageResolutions[maximumResolution])) {
+            maximumResolution--;
+          } else {
+            // Make the url actually point to the image and add it as a property to the object
+            let thumbnailImageUrl = allImageResolutions[maximumResolution].url;
+            thumbnailImageUrl = _.replace(thumbnailImageUrl, new RegExp('&amp;', 'g'), '&');
+            post['thumbnailImage'] = thumbnailImageUrl;
+            break;
+          }
+        }
+      }
+
+      // Decode HTML
+      post['selftext_html_parsed'] = this.decodeHtml(post.selftext_html);
+    });
+  }
+
+  decodeHtml(html) {
+    let txt = document.createElement("textarea");
+    txt.innerHTML = html;
+    return txt.value;
+  }
+
+  getOverviewPosts(user) {
+    this.reddit.getUserOverview(user).then((overview) => {
+      this.loadFeed(overview, false);
+    }).catch(err => {
+      console.log('Error getting user overview', err);
+    });
+  }
+
+  getMoreOverviewPosts(infiniteScroll, user) {
+    this.reddit.getUserOverview(user, this.amountOfMoreData).then((posts) => {
+      this.loadFeed(posts, true);
+      infiniteScroll.complete();
+    }).catch(err => {
+      console.log('Error getting more overview posts', err);
+    });
+  }
+
+  getCommentPosts(user) {
+    this.reddit.getUserComments(user).then((comments) => {
+      this.loadFeed(comments, false);
+    }).catch(err => {
+      console.log('Error getting user comments', err);
+    });
+  }
+
+  getMoreCommentPosts(infiniteScroll, user) {
+    this.reddit.getUserComments(user, this.amountOfMoreData).then((comments) => {
+      this.loadFeed(comments, true);
+      infiniteScroll.complete();
+    }).catch(err => {
+      console.log('Error getting more comments', err);
+    });
+  }
+
+  getSubmittedPosts(user) {
+    this.reddit.getUserSubmittedPosts(user).then((submittedPosts) => {
+      this.loadFeed(submittedPosts, false);
+    }).catch(err => {
+      console.log('Error getting user submitted posts', err);
+    });
+  }
+
+  getMoreSubmittedPosts(infiniteScroll, user) {
+    this.reddit.getUserSubmittedPosts(user, this.amountOfMoreData).then((submittedPosts) => {
+      this.loadFeed(submittedPosts, true);
+      infiniteScroll.complete();
+    }).catch(err => {
+      console.log('Error getting more user submitted posts', err);
+    });
+  }
+
+  getGildedPosts(user) {
+
+  }
+
+  getMoreGildedPosts(infiniteScroll, user) {
+    // TODO:
   }
 
 }

@@ -47,7 +47,6 @@
   <ion-list>
     <!--TODO: Throw error message if no user found-->
     <ion-card class="card" *ngFor="let post of posts">
-
       <ion-row *ngIf="isUserComment(post.contentType)">
         <ion-col (tap)="goToItemDetail(post)" class="info-comment-column">
           <span class="author-name">{{post.author.name}}</span>
@@ -106,6 +105,10 @@
       </ion-row>
 
     </ion-card>
+
+    <ion-infinite-scroll (ionInfinite)="loadMoreData($event)">
+      <ion-infinite-scroll-content></ion-infinite-scroll-content>
+    </ion-infinite-scroll>
 
   </ion-list>
 
