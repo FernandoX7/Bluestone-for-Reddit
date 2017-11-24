@@ -124,9 +124,9 @@ export class UserSearch implements OnInit {
     }
   }
 
-  goToItemDetail(item) {
+  goToItemDetail(post) {
     this.navCtrl.push(HomeItemDetail, {
-      feedItem: item
+      feedPost: post
     });
   }
 
