@@ -143,4 +143,13 @@ export class RedditService implements OnInit {
     });
   }
 
+  // User leaves a comment on a post => Get that posts data
+  getCommentedOnPostData(parentID) {
+    return new Promise((resolve, reject) => {
+      this.reddit.getComment(parentID).fetch().then(comment => {
+        resolve(comment);
+      }).catch(error => reject(error));
+    });
+  }
+
 }

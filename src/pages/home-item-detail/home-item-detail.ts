@@ -27,6 +27,7 @@ export class HomeItemDetail implements OnInit {
     this.commentsService.fetchComments(this.post).subscribe((comments) => {
       this.loadedComments = true;
       this.comments = comments;
+      console.log('comments', comments);
     });
   }
 

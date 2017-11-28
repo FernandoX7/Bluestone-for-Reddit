@@ -58,33 +58,13 @@ export class UserSearch implements OnInit {
           name: userInfo['name']
         };
 
-        this.reddit.getUserSubmittedPosts(this.username).then((submittedPosts) => {
-          this.user['submittedPosts'] = submittedPosts;
+        this.reddit.getUserOverview(this.username).then(overviewData => {
+          this.addContentType(overviewData).then(posts => {
+            this.loadFeed(posts, false);
+            this.user['overview'] = overviewData;
 
-          this.reddit.getUserComments(this.username).then((comments) => {
-            this.user['comments'] = comments;
-
-            this.reddit.getUserOverview(this.username).then((overviewData) => {
-              // Save if it's a user submitted post or a comment
-              this.addContentType(overviewData).then(posts => {
-                overviewData = posts;
-                this.user['overview'] = overviewData;
-
-                resolve(this.user);
-              });
-            }).catch(err => {
-              console.log('Error getting the users comments', err);
-              reject(err);
-            });
-
-          }).catch(err => {
-            console.log('Error getting the users comments', err);
-            reject(err);
+            resolve(this.user);
           });
-
-        }).catch(err => {
-          console.log('Error getting the users submitted posts', err);
-          reject(err);
         });
 
       }).catch(err => {
@@ -125,9 +105,19 @@ export class UserSearch implements OnInit {
   }
 
   goToItemDetail(post) {
-    this.navCtrl.push(HomeItemDetail, {
-      feedPost: post
-    });
+    if (post.contentType === 'Comment') {
+      this.reddit.getCommentedOnPostData(post.link_id).then(parentPost => {
+        this.addHigherQualityThumbnails([parentPost]).then(finalizedPost => {
+          this.navCtrl.push(HomeItemDetail, {
+            feedPost: finalizedPost[0],
+          });
+        });
+      })
+    } else {
+      this.navCtrl.push(HomeItemDetail, {
+        feedPost: post,
+      });
+    }
   }
 
   openImage(post) {
@@ -287,64 +277,68 @@ export class UserSearch implements OnInit {
   }
 
   addHigherQualityThumbnails(posts?) {
-    if (_.isNil(posts)) {
-      posts = this.posts;
-    }
+    return new Promise((resolve, reject) => {
+      if (_.isNil(posts)) {
+        posts = this.posts;
+      }
 
-    _.forEach(posts, (post) => {
-      // Set hours posted ago
-      post['hoursAgo'] = this.getHoursAgo(post.created_utc);
+      _.forEach(posts, (post) => {
+        // Set hours posted ago
+        post['hoursAgo'] = this.getHoursAgo(post.created_utc);
 
-      // If there's no preview property - it's an all text post
-      if (post.hasOwnProperty('preview')) {
-        // Iterate through the resolutions array to find the highest resolution for that picture
-        let maximumResolution = 10;
-        let allImageResolutions = post.preview.images[0].resolutions;
+        // If there's no preview property - it's an all text post
+        if (post.hasOwnProperty('preview')) {
+          // Iterate through the resolutions array to find the highest resolution for that picture
+          let maximumResolution = 10;
+          let allImageResolutions = post.preview.images[0].resolutions;
 
-        // Check if it's a gif
-        if (post.url.substr(post.url.length - 4) === 'gifv') {
-          if (post.preview.images[0].variants.gif) {
-            allImageResolutions = post.preview.images[0].variants.gif.resolutions;
-          } else {
-            allImageResolutions = {
-              noResolutions: true,
-              url: post.url
+          // Check if it's a gif
+          if (post.url.substr(post.url.length - 4) === 'gifv') {
+            if (post.preview.images[0].variants.gif) {
+              allImageResolutions = post.preview.images[0].variants.gif.resolutions;
+            } else {
+              allImageResolutions = {
+                noResolutions: true,
+                url: post.url
+              }
             }
-          }
 
-          if (allImageResolutions.noResolutions !== true) {
-            while (maximumResolution > 0) {
-              if (_.isNil(allImageResolutions[maximumResolution])) {
-                maximumResolution--; // GET OUT OF LOOP! :O
-              } else {
-                // Make the url actually point to an image and add it as a property to the object
-                let thumbnailImageUrl = allImageResolutions[maximumResolution].url;
-                thumbnailImageUrl = _.replace(thumbnailImageUrl, new RegExp('&amp;', 'g'), '&'); // Replace & with &amp;
-                post['gifImage'] = thumbnailImageUrl;
-                break;
+            if (allImageResolutions.noResolutions !== true) {
+              while (maximumResolution > 0) {
+                if (_.isNil(allImageResolutions[maximumResolution])) {
+                  maximumResolution--; // GET OUT OF LOOP! :O
+                } else {
+                  // Make the url actually point to an image and add it as a property to the object
+                  let thumbnailImageUrl = allImageResolutions[maximumResolution].url;
+                  thumbnailImageUrl = _.replace(thumbnailImageUrl, new RegExp('&amp;', 'g'), '&'); // Replace & with &amp;
+                  post['gifImage'] = thumbnailImageUrl;
+                  break;
+                }
               }
             }
           }
-        }
 
-        // Reset variable back to normal images and not gifs
-        allImageResolutions = post.preview.images[0].resolutions;
+          // Reset variable back to normal images and not gifs
+          allImageResolutions = post.preview.images[0].resolutions;
 
-        while (maximumResolution > 0) {
-          if (_.isNil(allImageResolutions[maximumResolution])) {
-            maximumResolution--;
-          } else {
-            // Make the url actually point to the image and add it as a property to the object
-            let thumbnailImageUrl = allImageResolutions[maximumResolution].url;
-            thumbnailImageUrl = _.replace(thumbnailImageUrl, new RegExp('&amp;', 'g'), '&');
-            post['thumbnailImage'] = thumbnailImageUrl;
-            break;
+          while (maximumResolution > 0) {
+            if (_.isNil(allImageResolutions[maximumResolution])) {
+              maximumResolution--;
+            } else {
+              // Make the url actually point to the image and add it as a property to the object
+              let thumbnailImageUrl = allImageResolutions[maximumResolution].url;
+              thumbnailImageUrl = _.replace(thumbnailImageUrl, new RegExp('&amp;', 'g'), '&');
+              post['thumbnailImage'] = thumbnailImageUrl;
+              break;
+            }
           }
         }
-      }
 
-      // Decode HTML
-      post['selftext_html_parsed'] = this.decodeHtml(post.selftext_html);
+        // Decode HTML
+        post['selftext_html_parsed'] = this.decodeHtml(post.selftext_html);
+
+        resolve(posts);
+      });
     });
   }
 
