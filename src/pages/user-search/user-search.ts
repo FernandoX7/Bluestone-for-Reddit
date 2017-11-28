@@ -105,6 +105,7 @@ export class UserSearch implements OnInit {
   }
 
   goToItemDetail(post) {
+    // TODO: Don't show all comments to the user, just the ones that the user actually commented and its replies
     if (post.contentType === 'Comment') {
       this.reddit.getCommentedOnPostData(post.link_id).then(parentPost => {
         this.addHigherQualityThumbnails([parentPost]).then(finalizedPost => {
